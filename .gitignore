@@ -1,0 +1,62 @@
+# .NET build output
+
+bin/
+obj/
+
+# Visual Studio
+
+.vs/
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+
+# Visual Studio Code
+
+.vscode/
+
+# Rider
+
+.idea/
+*.sln.iml
+
+# Test results
+
+TestResults/
+*.trx
+
+# NuGet
+
+*.nupkg
+*.snupkg
+packages/
+
+# Logs
+
+*.log
+
+# SQLite database
+
+*.db
+*.db-shm
+*.db-wal
+
+# Environment / local configuration
+
+.env
+.env.*
+appsettings.Local.json
+
+# OS generated files
+
+.DS_Store
+Thumbs.db
+
+# Temporary files
+
+*.tmp
+*.temp
+*.bak
+
+# Fimea source data
+backend/Laakelista.Api/FimeaData/perusrekisteri.xml

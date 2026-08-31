@@ -1,0 +1,693 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- edited by Markus Mäkelä (Fimea) -->
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:vc="http://www.w3.org/2007/XMLSchema-versioning"
+	elementFormDefault="qualified" attributeFormDefault="unqualified" vc:minVersion="1.1">
+	<xs:element name="Perusrekisteri">
+		<xs:annotation>
+			<xs:documentation>Fimean toimittama lääkevalmisteiden perusrekisteri</xs:documentation>
+		</xs:annotation>
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="Versiotiedot">
+					<xs:annotation>
+						<xs:documentation>Yksilöivät toimitettavan erän</xs:documentation>
+					</xs:annotation>
+					<xs:complexType>
+						<xs:sequence>
+							<xs:element name="Ajopvm" type="xs:date">
+								<xs:annotation>
+									<xs:documentation>Aineiston ajopäivämäärä (esim. 2021-01-23)</xs:documentation>
+								</xs:annotation>
+							</xs:element>
+							<xs:element name="Aineistoera" type="xs:string">
+								<xs:annotation>
+									<xs:documentation>Aineistoerän tunnistetieto. Vuosiluku ja kuluva päivä.</xs:documentation>
+								</xs:annotation>
+							</xs:element>
+							<xs:element name="Kkera" type="xs:string" minOccurs="0">
+								<xs:annotation>
+									<xs:documentation>Aineistoerän tarkenne. Kuukauden ensimmäinen tai toinen puolisko.</xs:documentation>
+								</xs:annotation>
+							</xs:element>
+							<xs:element name="Kattavuus" type="xs:integer">
+								<xs:annotation>
+									<xs:documentation>Mikä osa rekisteristä kuuluu tähän ajoon. Aina 1.</xs:documentation>
+								</xs:annotation>
+							</xs:element>
+						</xs:sequence>
+					</xs:complexType>
+				</xs:element>
+				<xs:element name="Pakkaus" minOccurs="0" maxOccurs="unbounded">
+					<xs:annotation>
+						<xs:documentation>Lääkevalmisteen konkreettinen jakelumuoto. Voi sisältää useampia farmaseuttisia tuotteita.</xs:documentation>
+					</xs:annotation>
+					<xs:complexType>
+						<xs:sequence>
+							<xs:sequence>
+								<xs:element name="Pakkaustunnus" type="xs:string">
+									<xs:annotation>
+										<xs:documentation>Fimean myyntiluparekisterin muuttumaton tekninen tunniste</xs:documentation>
+									</xs:annotation>
+								</xs:element>
+								<xs:element name="VNR-numero" type="xs:string" minOccurs="0" maxOccurs="1" >
+									<xs:annotation>
+										<xs:documentation>Pohjoismainen tuotenumero. Pakkauksen yksilöivä numero. Valtaosalla kaupan olevista pakkauksista löytyy tämä tunnistetieto.</xs:documentation>
+									</xs:annotation>
+								</xs:element>
+								<xs:element name="VanhaVNR" type="xs:string" minOccurs="0" maxOccurs="unbounded">
+									<xs:annotation>
+										<xs:documentation>Listaus pakkauksen mahdollisista vanhoista VNR-numeroista.</xs:documentation>
+									</xs:annotation>
+								</xs:element>
+								<xs:element name="Pakkauskokoteksti" type="xs:string">
+									<xs:annotation>
+										<xs:documentation>Pakkauksen koko "ei-rakenteellisena".</xs:documentation>
+									</xs:annotation>
+								</xs:element>
+								<xs:element name="Pakkauskokokerroin" type="xs:positiveInteger" minOccurs="0" >
+									<xs:annotation>
+										<xs:documentation>Pakkauskoon kerroin (2): esim. 2 x 10 kpl.</xs:documentation>
+									</xs:annotation>
+								</xs:element>
+								<xs:element name="Pakkauskoko" type="xs:decimal" minOccurs="0" >
+									<xs:annotation>
+										<xs:documentation>Pakkauksen koko (10): esim. 2 x 10 kpl.</xs:documentation>
+									</xs:annotation>
+								</xs:element>
+								<xs:element name="Pakkauskokoyksikko" type="CT" minOccurs="0" >
+									<xs:annotation>
+										<xs:documentation>Pakkauksen koon yksikkö (kpl): esim. 2 x 10 kpl.</xs:documentation>
+									</xs:annotation>
+								</xs:element>
+								<xs:element name="Reseptistatus" type="CT" minOccurs="0">
+									<xs:annotation>
+										<xs:documentation>Vaatiiko pakkaus reseptin? R = resepti, K = käsikauppa (itsehoito).</xs:documentation>
+									</xs:annotation>
+								</xs:element>
+								<xs:element name="JulkinenTarkenne" type="CT" minOccurs="0">
+									<xs:annotation>
+										<xs:documentation>Pakkausta yksilöivä tarkenne esim. "Sairaalapakkaus".</xs:documentation>
+									</xs:annotation>
+								</xs:element>
+								<xs:element name="Annostelulaite" type="CT" minOccurs="0">
+									<xs:annotation>
+										<xs:documentation>Sisältyykö pakkaukseen annostelulaite, esim. "mittaruisku".</xs:documentation>
+									</xs:annotation>
+								</xs:element>
+								<xs:element name="Sailytysastia" type="CT" minOccurs="0" >
+									<xs:annotation>
+										<xs:documentation>Säilytysastia, esim. "injektiopullo".</xs:documentation>
+									</xs:annotation>
+								</xs:element>
+								<xs:element name="Suljin" type="CT" minOccurs="0" >
+									<xs:annotation>
+										<xs:documentation>Pakkauksen suljin, esim. "kierrekorkki".</xs:documentation>
+									</xs:annotation>
+								</xs:element>
+								<xs:element name="SaatavuushairioTiedot" >
+									<xs:annotation>
+										<xs:documentation>Saatavuushäiriöhaussa esitetyt tiedot perustuvat lääkeyrityksen toimittamiin tietoihin. Saatavuushäiriön kesto perustuu lääkeyrityksen arvioon ja lääkeyrityksellä on vastuu päivittää tieto saatavuushäiriön kestosta, jos siinä tapahtuu muutoksia.</xs:documentation>
+									</xs:annotation>
+									<xs:complexType>
+										<xs:sequence>
+											<xs:element name="Saatavuushairio" type="xs:boolean">
+												<xs:annotation>
+													<xs:documentation>Onko pakkauksella aktiivinen saatavuushäiriö: kyllä(1)/ei(0).</xs:documentation>
+												</xs:annotation>
+											</xs:element>
+											<xs:element name="SaatavuushairioAlkupaiva" type="xs:date" minOccurs="0" >
+												<xs:annotation>
+													<xs:documentation>Katkoksen arvioitu alkamispäivä.</xs:documentation>
+												</xs:annotation>
+											</xs:element>
+											<xs:element name="SaatavuushairioLoppupaiva" type="xs:date" minOccurs="0" >
+												<xs:annotation>
+													<xs:documentation>Katkoksen arvioitu päättymispäivä.</xs:documentation>
+												</xs:annotation>
+											</xs:element>
+											<xs:element name="SaatavuushairioIlmoituspaiva" type="xs:date" minOccurs="0" >
+												<xs:annotation>
+													<xs:documentation>Katkoksen ensimmäinen ilmoituspäivä.</xs:documentation>
+												</xs:annotation>
+											</xs:element>
+											<xs:element name="SaatavuushairioMuokkauspaiva" type="xs:date" minOccurs="0" >
+												<xs:annotation>
+													<xs:documentation>Katkoksen viimeisin ilmoituspäivä.</xs:documentation>
+												</xs:annotation>
+											</xs:element>
+											<xs:element name="SaatavuushairioSyy" type="xs:string" minOccurs="0" >
+												<xs:annotation>
+													<xs:documentation>Ei käytössä toistaiseksi.</xs:documentation>
+												</xs:annotation>
+											</xs:element>
+											<xs:element name="SaatavuushairioLisatietojenAntaja" type="xs:string" minOccurs="0" >
+												<xs:annotation>
+													<xs:documentation>Myyntiluvan haltijan yhteystieto.</xs:documentation>
+												</xs:annotation>
+											</xs:element>
+										</xs:sequence>
+									</xs:complexType>
+								</xs:element>
+								<xs:element name="Kaupanolo" >
+									<xs:annotation>
+										<xs:documentation>Pakkauksen kaupanolotieto.</xs:documentation>
+									</xs:annotation>
+									<xs:complexType>
+										<xs:sequence>
+											<xs:element name="Kaupan" type="xs:boolean" >
+												<xs:annotation>
+													<xs:documentation>Onko pakkaus kaupan: kyllä(1)/ei(0).</xs:documentation>
+												</xs:annotation>
+											</xs:element>
+											<xs:element name="Kauppaantulopaiva" type="xs:date" minOccurs="0" >
+												<xs:annotation>
+													<xs:documentation>Pakkauksen viimeisin kauppaantulopäivä.</xs:documentation>
+												</xs:annotation>
+											</xs:element>
+											<xs:element name="Kaupastapoistumispaiva" type="xs:date" minOccurs="0" >
+												<xs:annotation>
+													<xs:documentation>Pakkauksen kaupastapoistumispäivä.</xs:documentation>
+												</xs:annotation>
+											</xs:element>
+										</xs:sequence>
+									</xs:complexType>
+								</xs:element>
+							</xs:sequence>
+							<xs:element name="Pakkaus_Laakeaine" maxOccurs="unbounded">
+								<xs:annotation>
+									<xs:documentation>Pakkaus-Lääkeaine -relaatio, jokaiseen pakkaukseen liittyy yksi tai useampi "Laakeaine".</xs:documentation>
+								</xs:annotation>
+								<xs:complexType>
+									<xs:attribute name="Laakeaine-ref" type="xs:IDREF" use="required" />
+								</xs:complexType>
+							</xs:element>
+						</xs:sequence>
+						<xs:attribute name="Laakevalmiste-ref" type="xs:IDREF" use="required">
+							<xs:annotation>
+								<xs:documentation>Pakkaus-Lääkevalmiste -relaatio, jokaiseen pakkaukseen liittyy vain yksi "Laakevalmiste".</xs:documentation>
+							</xs:annotation>
+						</xs:attribute>
+					</xs:complexType>
+				</xs:element>
+				<xs:element name="Laakevalmiste" minOccurs="0" maxOccurs="unbounded">
+					<xs:annotation>
+						<xs:documentation>Lääkevalmistetason tiedot.</xs:documentation>
+					</xs:annotation>
+					<xs:complexType>
+						<xs:sequence>
+							<xs:element name="Kauppanimi" type="xs:string">
+								<xs:annotation>
+									<xs:documentation>Lääkevalmisteen voimassaoleva kauppanimi ajopäivänä.</xs:documentation>
+								</xs:annotation>
+							</xs:element>
+							<xs:element name="EdellinenKauppanimi" type="xs:string" minOccurs="0" maxOccurs="unbounded">
+								<xs:annotation>
+									<xs:documentation>Edelliset kauppanimet myyntiluvan päätöspäivästä lähtien.</xs:documentation>
+								</xs:annotation>
+							</xs:element>
+							<xs:element name="ATCTUN" type="xs:string" minOccurs="0">
+								<xs:annotation>
+									<xs:documentation>ATC-koodin tekninen id Fimean tietokannassa.</xs:documentation>
+								</xs:annotation>
+							</xs:element>
+							<xs:element name="ATC-koodi" type="CT">
+								<xs:annotation>
+									<xs:documentation>Anatomis-terapeuttis-kemiallisessa (Anatomical Therapeutic Chemical, ATC) luokituksessa lääkkeet on jaettu ryhmiin sen mukaan, mihin elimeen tai elinjärjestelmään ne vaikuttavat sekä niiden kemiallisten, farmakologisten ja terapeuttisten ominaisuuksien mukaan.</xs:documentation>
+								</xs:annotation>
+							</xs:element>
+							<xs:element name="Vahvuus" type="xs:string" minOccurs="0">
+								<xs:annotation>
+									<xs:documentation>Lääkevalmisteen vahvuustieto.</xs:documentation>
+								</xs:annotation>
+							</xs:element>
+							<xs:element name="Laakemuoto" type="CT" >
+								<xs:annotation>
+									<xs:documentation>Valmisteen lääkemuoto, esim. "tabletti, kalvopäällysteinen".</xs:documentation>
+								</xs:annotation>
+							</xs:element>
+							<xs:element name="Antoreitti" type="CT" minOccurs="0" maxOccurs="unbounded" >
+								<xs:annotation>
+									<xs:documentation>Lääkevalmisteen antoreitti, esim. "Suun kautta".</xs:documentation>
+								</xs:annotation>
+							</xs:element>
+							<xs:element name="Vaikainelkm" type="xs:integer" minOccurs="0" >
+								<xs:annotation>
+									<xs:documentation>Vaikuttavien aineiden lukumäärä. Ei käytössä.</xs:documentation>
+								</xs:annotation>
+							</xs:element>
+							<xs:element name="DDD" type="xs:string" minOccurs="0" >
+								<xs:annotation>
+									<xs:documentation>Defined daily dose (DDD), eli määritelty vuorokausiannoksen määrä.</xs:documentation>
+								</xs:annotation>
+							</xs:element>
+							<xs:element name="DDDyksikko" type="xs:string" minOccurs="0" >
+								<xs:annotation>
+									<xs:documentation>Defined daily dose (DDD) yksikkö.</xs:documentation>
+								</xs:annotation>
+							</xs:element>
+							<xs:element name="HUM" type="xs:boolean">
+								<xs:annotation>
+									<xs:documentation>Ihmiselle tarkoitettu lääkevalmiste.</xs:documentation>
+								</xs:annotation>
+							</xs:element>
+							<xs:element name="VET" type="xs:boolean">
+								<xs:annotation>
+									<xs:documentation>Eläinlääkevalmiste.</xs:documentation>
+								</xs:annotation>
+							</xs:element>
+							<xs:element name="Maaraamisehto" type="CT" minOccurs="0" maxOccurs="unbounded" >
+								<xs:annotation>
+									<xs:documentation>Kuvaa rajoituksia lääkkeen määräämisoikeudessa. Määräämisehdon koodi, viiteavain määräämisehtokoodistoon. Esimerkiksi E139.</xs:documentation>
+								</xs:annotation>
+							</xs:element>
+							<xs:element name="Huume" type="CT" minOccurs="0" >
+								<xs:annotation>
+									<xs:documentation>Huume ilmaisee onko lääke luokiteltu huumeeksi. H=huume, HE= Varsinaiset huumausaineet, joista saatava joka kerta erillinen Fimean lupa (määräaikaisen erityisluvan yhteydessä).</xs:documentation>
+								</xs:annotation>
+							</xs:element>
+							<xs:element name="PKV" type="CT" minOccurs="0" >
+								<xs:annotation>
+									<xs:documentation>PKV-lääkkeet ovat pääasiassa keskushermostoon vaikuttavia lääkkeitä. P=PKV-lääke, PA=PKV-lääke. Vain säilytettävällä reseptillä. Z=PKV-lääke, psykotrooppinen aine (luettelot III ja IV) tai VNA 543/2008 liite V, ZA=PKV-lääke, psykotrooppinen aine (luettelot III ja IV). Vain säilytettävällä reseptillä.</xs:documentation>
+								</xs:annotation>
+							</xs:element>
+							<xs:element name="Liikennevaara" type="xs:boolean" >
+								<xs:annotation>
+									<xs:documentation>1=kyllä, 0=ei. Liikennevaaralla ilmaistaan, onko lääkkeellä odotettavissa sen vaikutustapansa perusteella sellaista keskushermostovaikutusta, että se voi heikentää lääkkeen käyttäjän suoriutumista liikenteessä tai tarkkuutta vaativissa tehtävissä. Valmisteiden pakkauksissa on tällöin varoituskolmio. Kuitenkin, jos lääkettä käytetään vain sairaalaolosuhteissa, ei varoituskolmiota pääsääntöisesti ole, eikä tällöin ole liikennevaaraa merkitty valmisteelle.</xs:documentation>
+								</xs:annotation>
+							</xs:element>
+							<xs:element name="Lastenlaake" type="xs:boolean" minOccurs="0" >
+								<xs:annotation>
+									<xs:documentation>Ei käytössä tällä hetkellä.</xs:documentation>
+								</xs:annotation>
+							</xs:element>
+							<xs:element name="Biologinen" type="xs:boolean" >
+								<xs:annotation>
+									<xs:documentation>Biologinen lääkevalmiste.</xs:documentation>
+								</xs:annotation>
+							</xs:element>
+							<xs:element name="Plasmaperainenvalmiste" type="xs:boolean" >
+								<xs:annotation>
+									<xs:documentation>Plasmaperäisiä lääkevalmisteita ovat ne valmisteet, joiden vaikuttava aine on peräisin ihmisen verestä tai plasmasta.</xs:documentation>
+								</xs:annotation>
+							</xs:element>
+							<xs:element name="Substituutioryhma" type="CT" minOccurs="0" >
+								<xs:annotation>
+									<xs:documentation>Geneerisen substituution eli lääkevaihdon ryhmittely. Ne lääkevalmisteet, joilla on sama substituutioryhmä, ovat keskenään vaihtokelpoisia. Substituutioryhmä on annettu lääkevalmistetasolla ja monistettu pakkauksille. Fimea ei ota kantaa saman substituutioryhmän lääkevalmisteiden pakkauskokojen keskenään vaihdettavuuteen.</xs:documentation>
+								</xs:annotation>
+							</xs:element>
+							<xs:element name="Velvoitevarastointi" type="xs:boolean" >
+								<xs:annotation>
+									<xs:documentation>Velvoitevarastointilainsäädännön tarkoituksena on turvata lääkkeiden saatavuus ja käyttömahdollisuudet tilanteissa, joissa lääkkeiden tavanomainen saatavuus maahamme on vaikeutunut tai estynyt lääkkeiden toimituskatkosten, vakavan kriisin tai muun näihin verrattavan syyn takia.</xs:documentation>
+								</xs:annotation>
+							</xs:element>
+							<xs:element name="Lisaseurannassa" type="xs:boolean" >
+								<xs:annotation>
+									<xs:documentation>Lisäseurantaan asetetaan lääkkeitä, joista on saatavilla vähemmän tietoa kuin muista lääkkeistä esimerkiksi sen vuoksi, että ne ovat uusia tai niiden pitkäaikaisesta käytöstä on rajallisesti tietoa.</xs:documentation>
+								</xs:annotation>
+							</xs:element>
+							<xs:element name="Biosimilaari" type="xs:boolean" >
+								<xs:annotation>
+									<xs:documentation>Biosimilaari on biologinen lääke, joka on kehitetty samankaltaiseksi ja vertailukelpoiseksi alkuperäislääkkeenä tunnetun biologisen viitevalmisteensa kanssa. Biosimilaariryhmätieto saadaan LaakRyhmat-tietueesta.</xs:documentation>
+								</xs:annotation>
+							</xs:element>
+							<xs:element name="Kohdeelainlaji" minOccurs="0" maxOccurs="unbounded" >
+								<xs:annotation>
+									<xs:documentation>Eläinlääkevalmisteen kohde-eläinlajit.</xs:documentation>
+								</xs:annotation>
+								<xs:complexType>
+									<xs:sequence>
+										<xs:element name="Elainlaji" type="CT" minOccurs="0" >
+											<xs:annotation>
+												<xs:documentation>Kohde-eläinlaji.</xs:documentation>
+											</xs:annotation>
+										</xs:element>
+										<xs:element name="Elainlaji-ATC-koodi" type="CT" minOccurs="0" >
+											<xs:annotation>
+												<xs:documentation>kohde-eläinlajin ATC-luokitus.</xs:documentation>
+											</xs:annotation>
+										</xs:element>
+										<xs:element name="Elainlaji-Antoreitti" type="CT" minOccurs="0" maxOccurs="unbounded" >
+											<xs:annotation>
+												<xs:documentation>Lääkevalmisteen antoreitti kyseisellä eläinlajilla.</xs:documentation>
+											</xs:annotation>
+										</xs:element>
+									</xs:sequence>
+								</xs:complexType>
+							</xs:element>
+							<xs:element name="Varoaika" minOccurs="0" maxOccurs="unbounded">
+								<xs:annotation>
+									<xs:documentation>Varoajalla tarkoitetaan viimeisestä lääkkeen antamisesta laskettua vähimmäisaikaa, jonka kuluessa teurastetun eläimen lihaa tai muita eläimestä saatuja tuotteita ei saa luovuttaa elintarvikkeena käytettäväksi.</xs:documentation>
+								</xs:annotation>
+								<xs:complexType>
+									<xs:sequence>
+										<xs:element name="Varoaika-elainlaji" type="CT" minOccurs="0" >
+											<xs:annotation>
+												<xs:documentation>Varoajan eläinlaji.</xs:documentation>
+											</xs:annotation>
+										</xs:element>
+										<xs:element name="Kudos-toimenpide" type="CT" minOccurs="0" >
+											<xs:annotation>
+												<xs:documentation>Kudos/Toimenpide: tuotantoeläimen tuote tai tuotantoeläimeen liittyvä toimenpide. Esim. kananmuna tai teurastus.</xs:documentation>
+											</xs:annotation>
+										</xs:element>
+										<xs:element name="Varoaika-annostus" type="xs:string" minOccurs="0" >
+											<xs:annotation>
+												<xs:documentation>Annoskoko esim "40 mg/kg kerta-annos".</xs:documentation>
+											</xs:annotation>
+										</xs:element>
+										<xs:element name="Varoaika-antoreitti" type="CT" minOccurs="0" >
+											<xs:annotation>
+												<xs:documentation>Varoaikaan liittyvä antoreitti.</xs:documentation>
+											</xs:annotation>
+										</xs:element>
+										<xs:element name="Aika" type="xs:integer" minOccurs="0" >
+											<xs:annotation>
+												<xs:documentation>Varoajan kesto. Jos varoaika = 99, kts. lisätieto.</xs:documentation>
+											</xs:annotation>
+										</xs:element>
+										<xs:element name="Varoaika-yksikko" type="CT" minOccurs="0" >
+											<xs:annotation>
+												<xs:documentation>Varoajan keston yksikkö. Esim. "tuntia".</xs:documentation>
+											</xs:annotation>
+										</xs:element>
+										<xs:element name="Varoaika-lisatieto" type="xs:string" minOccurs="0" >
+											<xs:annotation>
+												<xs:documentation>Varoajan lisätieto.</xs:documentation>
+											</xs:annotation>
+										</xs:element>
+									</xs:sequence>
+								</xs:complexType>
+							</xs:element>
+							<xs:element name="LaakeRyhmat" minOccurs="0" >
+								<xs:annotation>
+									<xs:documentation>Lääkevalmisteen mahdolliset ryhmätiedot.</xs:documentation>
+								</xs:annotation>
+								<xs:complexType>
+									<xs:sequence>
+										<xs:element name="LaakeRyhma" type="CT" maxOccurs="unbounded" >
+											<xs:annotation>
+												<xs:documentation>Ryhmätieto, esim. Biosimilaariryhmä "G001".</xs:documentation>
+											</xs:annotation>
+										</xs:element>
+									</xs:sequence>
+								</xs:complexType>
+							</xs:element>
+							<xs:choice minOccurs="0">
+								<xs:annotation>
+									<xs:documentation>Myyntilupa > Erityislupa > Rekisteröinti > Peruuntunut lupa</xs:documentation>
+								</xs:annotation>
+								<xs:element name="Myyntilupa">
+									<xs:complexType>
+										<xs:sequence>
+											<xs:element name="Haltija" type="xs:string" >
+												<xs:annotation>
+													<xs:documentation>Myyntiluvan haltijan nimi.</xs:documentation>
+												</xs:annotation>
+											</xs:element>
+											<xs:element name="Lupanumero" type="xs:string" >
+												<xs:annotation>
+													<xs:documentation>Fimean antama myyntiluvan numero. Keskitetyn menettelyn valmisteilla ei ole tätä myyntilupanroa, kts. eumyyntilupanro. Määräaikaisten erityislupien kohdalla kyseessä on tekninen tunnistenumero.</xs:documentation>
+												</xs:annotation>
+											</xs:element>
+											<xs:element name="Tila" type="CT" >
+												<xs:annotation>
+													<xs:documentation>Myyntiluvan tila. 5=Myyntilupa myönnetty, 6=Myyntilupa peruuntunut hakijan toimesta, 7=Myyntilupa peruutettu viranomaisen toimesta, 8=Myyntilupa peruutettu väliaikaisesti, 9=Myynti kielletty viranomaisen toimesta, 10=Myynti keskeytetty haltijan toimesta, 11=Määräaikainen erityislupa, 12=Määräaikainen erityislupa päättynyt.</xs:documentation>
+												</xs:annotation>
+											</xs:element>
+											<xs:element name="Markkinoija" type="xs:string" minOccurs="0" maxOccurs="unbounded" >
+												<xs:annotation>
+													<xs:documentation>Ei käytössä.</xs:documentation>
+												</xs:annotation>
+											</xs:element>
+											<xs:element name="RinnakkaisTuonti" type="xs:boolean" >
+												<xs:annotation>
+													<xs:documentation>1=kyllä, 0=ei. Rinnakkaistuonti ilmaisee onko lääkevalmiste rinnakkaistuontivalmiste.</xs:documentation>
+												</xs:annotation>
+											</xs:element>
+											<xs:element name="RinnakkaisJakelu" type="xs:boolean" >
+												<xs:annotation>
+													<xs:documentation>Rinnakkaisjakelu on Euroopan lääkeviraston EMA:n myöntämän myyntiluvan saaneen valmisteen maahantuontia toisen lääkeyrityksen toimesta toisen jäsenvaltion markkinalta. Rinnakkaisjakeluun tarvitaan EMA:n myöntämä lupa.</xs:documentation>
+												</xs:annotation>
+											</xs:element>
+											<xs:element name="RinnakkaisKauppa" type="xs:boolean" minOccurs="0">
+												<xs:annotation>
+													<xs:documentation>Eläinlääkkeiden rinnakkaiskauppalupa (2022 alkaen)</xs:documentation>
+												</xs:annotation>
+											</xs:element>
+											<xs:element name="EU-lupanumero" minOccurs="0" >
+												<xs:annotation>
+													<xs:documentation>EU-komission antama myyntilupanro keskitetyn menettelyn valmisteille. esimerkiksi EU/1/20/1528/002.</xs:documentation>
+												</xs:annotation>
+											</xs:element>
+											<xs:element name="Prosessi" type="CT" >
+												<xs:annotation>
+													<xs:documentation>Kansallinen/Keskitetty/Hajautettu/Tunnustaminen</xs:documentation>
+												</xs:annotation>
+											</xs:element>
+											<xs:element name="Myontamispaiva" type="xs:date" minOccurs="0">
+												<xs:annotation>
+													<xs:documentation>Myyntiluvan myöntämispäivä.</xs:documentation>
+												</xs:annotation>
+											</xs:element>
+											<xs:element name="Paattymispaiva" type="xs:date" minOccurs="0">
+												<xs:annotation>
+													<xs:documentation>Myyntiluvan päättymispäivä. Päivä voi olla myös tulevaisuudessa.</xs:documentation>
+												</xs:annotation>
+											</xs:element>
+										</xs:sequence>
+									</xs:complexType>
+								</xs:element>
+								<xs:element name="Erityislupa">
+									<xs:annotation>
+										<xs:documentation>Määräaikainen erityislupa</xs:documentation>
+									</xs:annotation>
+									<xs:complexType>
+										<xs:sequence>
+											<xs:element name="Haltija" type="xs:string" >
+												<xs:annotation>
+													<xs:documentation>Määräaikaisten erityislupien kohdalla tässä kentässä on pääsääntöisesti valmistajan nimi.</xs:documentation>
+												</xs:annotation>
+											</xs:element>
+											<xs:element name="Lupanumero" type="xs:string" >
+												<xs:annotation>
+													<xs:documentation>Tekninen numero</xs:documentation>
+												</xs:annotation>
+											</xs:element>
+											<xs:element name="Tila" type="CT" >
+												<xs:annotation>
+													<xs:documentation>Myönnetty / peruutettu</xs:documentation>
+												</xs:annotation>
+											</xs:element>
+											<xs:element name="Myontamispaiva" type="xs:date" minOccurs="0">
+												<xs:annotation>
+													<xs:documentation>Luvan myöntämispäivä</xs:documentation>
+												</xs:annotation>
+											</xs:element>
+											<xs:element name="Paattymispaiva" type="xs:date" minOccurs="0">
+												<xs:annotation>
+													<xs:documentation>Luvan päättymispäivä.</xs:documentation>
+												</xs:annotation>
+											</xs:element>
+											<xs:element name="Ehto" type="xs:string" minOccurs="0">
+												<xs:annotation>
+													<xs:documentation>Määräaikaisen erityisluvan ehto.</xs:documentation>
+												</xs:annotation>
+											</xs:element>
+											<xs:element name="EhtoSv" type="xs:string" minOccurs="0">
+												<xs:annotation>
+													<xs:documentation>Määräaikaisen erityisluvan ehto ruotsiksi.</xs:documentation>
+												</xs:annotation>
+											</xs:element>
+										</xs:sequence>
+									</xs:complexType>
+								</xs:element>
+								<xs:element name="Rekisterointi" >
+									<xs:annotation>
+										<xs:documentation>Rekisteröintejä ovat perinteiset kasvirohdosvalmisteet, homeopaattiset ja antroposofiset valmisteet.</xs:documentation>
+									</xs:annotation>
+									<xs:complexType>
+										<xs:sequence>
+											<xs:element name="Haltija" type="xs:string" >
+												<xs:annotation>
+													<xs:documentation>Rekisteröinnin haltijan nimi.</xs:documentation>
+												</xs:annotation>
+											</xs:element>
+											<xs:element name="Rekisterointinumero" type="xs:string" >
+												<xs:annotation>
+													<xs:documentation>Fimean antama rekisteröintinumero.</xs:documentation>
+												</xs:annotation>
+											</xs:element>
+											<xs:element name="Tila" type="CT" >
+												<xs:annotation>
+													<xs:documentation>Rekisteröinti myönnetty / peruutettu.</xs:documentation>
+												</xs:annotation>
+											</xs:element>
+											<xs:element name="Prosessi" type="CT" >
+												<xs:annotation>
+													<xs:documentation>Rekisteröintihakemuksen prosessi. Kansallinen/Hajautettu/Tunnustaminen</xs:documentation>
+												</xs:annotation>
+											</xs:element>
+											<xs:element name="Myontamispaiva" type="xs:date" minOccurs="0">
+												<xs:annotation>
+													<xs:documentation>Rekisteröinnin myöntämispäivä</xs:documentation>
+												</xs:annotation>
+											</xs:element>
+											<xs:element name="Paattymispaiva" type="xs:date" minOccurs="0">
+												<xs:annotation>
+													<xs:documentation>Rekisteröinnin päättymispäivä. Päivä voi olla myös tulevaisuudessa.</xs:documentation>
+												</xs:annotation>
+											</xs:element>
+										</xs:sequence>
+									</xs:complexType>
+								</xs:element>
+							</xs:choice>
+							<xs:element name="RajattuMaaraamisoikeus" minOccurs="0" maxOccurs="unbounded" >
+								<xs:annotation>
+									<xs:documentation>Ei käytössä toistaiseksi.</xs:documentation>
+								</xs:annotation>
+								<xs:complexType>
+									<xs:sequence>
+										<xs:element name="Ammattiryhma" type="CT" >
+											<xs:annotation>
+												<xs:documentation></xs:documentation>
+											</xs:annotation>
+										</xs:element>
+										<xs:element name="Laakkeenmaaraystapa" type="CT" >
+											<xs:annotation>
+												<xs:documentation></xs:documentation>
+											</xs:annotation>
+										</xs:element>
+										<xs:element name="Tautitila" type="xs:string" >
+											<xs:annotation>
+												<xs:documentation></xs:documentation>
+											</xs:annotation>
+										</xs:element>
+										<xs:element name="Rajaus" type="xs:string" >
+											<xs:annotation>
+												<xs:documentation></xs:documentation>
+											</xs:annotation>
+										</xs:element>
+									</xs:sequence>
+								</xs:complexType>
+							</xs:element>
+						</xs:sequence>
+						<xs:attribute name="id" type="xs:ID" use="required" />
+					</xs:complexType>
+				</xs:element>
+				<xs:element name="Laakeaine" minOccurs="0" maxOccurs="unbounded">
+					<xs:annotation>
+						<xs:documentation>Lääkeainetaso</xs:documentation>
+					</xs:annotation>
+					<xs:complexType>
+						<xs:sequence>
+							<xs:element name="VaikuttavaAine" minOccurs="0" maxOccurs="unbounded">
+								<xs:annotation>
+									<xs:documentation>Lääkevalmisteen vaikuttava aine. Apuaineita ei luetella.</xs:documentation>
+								</xs:annotation>
+								<xs:complexType>
+									<xs:sequence>
+										<xs:element name="Laakeainetunnus" type="xs:long">
+											<xs:annotation>
+												<xs:documentation>Fimean myyntiluparekisterin tekninen tunnus.</xs:documentation>
+											</xs:annotation>
+										</xs:element>
+										<xs:element name="Aine" type="CT" >
+											<xs:annotation>
+												<xs:documentation>Vaikuttavan aineen nimi englanniksi.</xs:documentation>
+											</xs:annotation>
+										</xs:element>
+										<xs:element name="CASnumero" type="xs:string" minOccurs="0" >
+											<xs:annotation>
+												<xs:documentation>CAS-tunnus (Chemical Abstract Service) on yhdysvaltalaislähtöinen kemikaalien tunnistenumerojärjestelmä.</xs:documentation>
+											</xs:annotation>
+										</xs:element>
+										<xs:element name="Maara" type="xs:decimal" minOccurs="0">
+											<xs:annotation>
+												<xs:documentation>Vaikuttavan aineen määrä valmisteessa.</xs:documentation>
+											</xs:annotation>
+										</xs:element>
+										<xs:element name="Maarayksikko" type="CT" minOccurs="0" >
+											<xs:annotation>
+												<xs:documentation>Määrän yksikkö, esim. mg.</xs:documentation>
+											</xs:annotation>
+										</xs:element>
+										<xs:element name="JakamatonVahvuus" type="xs:string" minOccurs="0" >
+											<xs:annotation>
+												<xs:documentation>Aukikirjoitettu vahvuus jos rakenteellista vahvuutta ei ole saatavilla.</xs:documentation>
+											</xs:annotation>
+										</xs:element>
+										<xs:element name="MaaraMin" type="xs:string" minOccurs="0" >
+											<xs:annotation>
+												<xs:documentation>Vaikuttavan aineen vähimmäismäärä, kun määrä on ilmoitettu vaihteluvälinä.</xs:documentation>
+											</xs:annotation>
+										</xs:element>
+										<xs:element name="MaaraMax" type="xs:string" minOccurs="0" >
+											<xs:annotation>
+												<xs:documentation>Vaikuttavan aineen enimmäismäärä, kun määrä on ilmoitettu vaihteluvälinä.</xs:documentation>
+											</xs:annotation>
+										</xs:element>
+										<xs:element name="VastatenMaara" type="xs:string" minOccurs="0" >
+											<xs:annotation>
+												<xs:documentation>Vaikuttavan aineen määrä puhtaassa muodossa.</xs:documentation>
+											</xs:annotation>
+										</xs:element>
+										<xs:element name="VastatenAine" type="CT" minOccurs="0" >
+											<xs:annotation>
+												<xs:documentation>Vaikuttava aine puhtaassa muodossa.</xs:documentation>
+											</xs:annotation>
+										</xs:element>
+										<xs:element name="VastatenCASnumero" type="xs:string" minOccurs="0" >
+											<xs:annotation>
+												<xs:documentation>Vastaten aineen CAS-tunnus.</xs:documentation>
+											</xs:annotation>
+										</xs:element>
+										<xs:element name="Laake75" minOccurs="0">
+											<xs:annotation>
+												<xs:documentation>Lääke75+ tietokannan luokittelutieto vaikuttavan aineen soveltuvuudesta iäkkäille. Yhdellä lääkevalmisteella voi olla useampi vaikuttava aine, joilla on eri L75+ -luokitukset. Valmisteen luokitus on tällöin huonoimman soveltuvuuden mukainen.</xs:documentation>
+											</xs:annotation>
+											<xs:complexType>
+												<xs:sequence>
+													<xs:element name="Luokka" type="CT">
+														<xs:annotation>
+															<xs:documentation>A, B, C, D</xs:documentation>
+														</xs:annotation>
+													</xs:element>
+													<xs:element name="KommenttiFI" type="xs:string">
+														<xs:annotation>
+															<xs:documentation>Iäkkäille soveltuvuuden kommentti suomeksi.</xs:documentation>
+														</xs:annotation>
+													</xs:element>
+													<xs:element name="KommenttiSV" type="xs:string">
+														<xs:annotation>
+															<xs:documentation>Iäkkäille soveltuvuuden kommentti ruotsiksi.</xs:documentation>
+														</xs:annotation>
+													</xs:element>
+													<xs:element name="KommenttiEN" type="xs:string">
+														<xs:annotation>
+															<xs:documentation>Iäkkäille soveltuvuuden kommentti englanniksi.</xs:documentation>
+														</xs:annotation>
+													</xs:element>
+													<xs:element name="LuokitteluPvm" type="xs:date">
+														<xs:annotation>
+															<xs:documentation>Lääke 75+ luokittelun viimeisin tarkistuspäivä.</xs:documentation>
+														</xs:annotation>
+													</xs:element>
+												</xs:sequence>
+											</xs:complexType>
+										</xs:element>
+									</xs:sequence>
+								</xs:complexType>
+							</xs:element>
+						</xs:sequence>
+						<xs:attribute name="id" type="xs:ID" use="required" />
+					</xs:complexType>
+				</xs:element>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	<xs:complexType name="CT">
+		<xs:attribute name="listname" />
+		<xs:attribute name="id" />
+		<xs:attribute name="value" />
+	</xs:complexType>
+</xs:schema>

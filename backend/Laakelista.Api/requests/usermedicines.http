@@ -1,0 +1,13 @@
+### Get all
+GET http://localhost:5027/api/usermedicines
+
+### Add new medicine
+POST http://localhost:5027/api/usermedicines
+Content-Type: application/json
+
+{
+    "medicineId": 1195,
+    "purpose": "Päänsärky",
+    "dosage": "1 tabletti tarvittaessa",
+    "notes": "Enintään 3 tablettia päivässä"
+}

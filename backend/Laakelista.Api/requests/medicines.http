@@ -1,0 +1,47 @@
+### Get all medicines
+
+GET http://localhost:5027/api/medicines
+
+### Get medicine by id
+
+GET http://localhost:5027/api/medicines/99999999
+
+### Create medicine
+
+POST http://localhost:5027/api/medicines
+Content-Type: application/json
+
+{
+    "name": "Burana 400 mg",
+    "activeIngredient": "ibuprofeeni"
+}
+
+### Update medicine
+
+PUT http://localhost:5027/api/medicines/5
+Content-Type: application/json
+
+{
+    "name": "Burana 400 mg tabletti",
+    "activeIngredient": "ibuprofeeni"
+}
+
+### Delete medicine
+DELETE http://localhost:5027/api/medicines/6
+
+
+### Get medicine by name
+GET http://localhost:5027/api/medicines/search?query=burana&page=1&pageSize=5
+
+
+### Ensimmäinen sivu
+GET http://localhost:5027/api/medicines/search?query=burana&page=1&pageSize=5
+
+### Toinen sivu
+GET http://localhost:5027/api/medicines/search?query=burana&page=2&pageSize=5
+
+### Liian suuri pageSize
+GET http://localhost:5027/api/medicines/search?query=burana&page=1&pageSize=101
+
+### Virheellinen sivunumero
+GET http://localhost:5027/api/medicines/search?query=burana&page=0&pageSize=10

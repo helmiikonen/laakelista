@@ -31,7 +31,8 @@ public class MedicineService
         {
             Id = medicine.Id,
             Name = medicine.Name,
-            ActiveIngredient = medicine.ActiveIngredient
+            ActiveIngredient = medicine.ActiveIngredient,
+            Strength = medicine.Strength
         }).ToList();
 
         return new PagedResult<MedicineResponse>
@@ -65,7 +66,8 @@ public class MedicineService
     {
         Id = medicine.Id,
         Name = medicine.Name,
-        ActiveIngredient = medicine.ActiveIngredient
+        ActiveIngredient = medicine.ActiveIngredient,
+        Strength = medicine.Strength
     }).ToList();
 
     return new PagedResult<MedicineResponse>
@@ -90,7 +92,8 @@ public class MedicineService
         {
             Id = medicine.Id,
             Name = medicine.Name,
-            ActiveIngredient = medicine.ActiveIngredient
+            ActiveIngredient = medicine.ActiveIngredient,
+            Strength = medicine.Strength
         };
     }
 

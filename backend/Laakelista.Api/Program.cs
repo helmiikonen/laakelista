@@ -14,6 +14,7 @@ builder.Services.AddDbContext<LaakelistaDbContext>(options =>
 builder.Services.AddScoped<MedicineService>();
 builder.Services.AddScoped<UserMedicineService>();
 builder.Services.AddScoped<FimeaImportService>();
+builder.Services.AddScoped<UserService>();
 
 var app = builder.Build();
 

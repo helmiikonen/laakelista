@@ -57,9 +57,27 @@ namespace Laakelista.Api.Migrations
                     b.Property<string>("RouteOfAdministration")
                         .HasColumnType("TEXT");
 
+                    b.Property<string>("Strength")
+                        .HasColumnType("TEXT");
+
                     b.HasKey("Id");
 
                     b.ToTable("Medicines");
+                });
+
+            modelBuilder.Entity("Laakelista.Api.Models.User", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Users");
                 });
 
             modelBuilder.Entity("Laakelista.Api.Models.UserMedicine", b =>
@@ -82,9 +100,14 @@ namespace Laakelista.Api.Migrations
                         .IsRequired()
                         .HasColumnType("TEXT");
 
+                    b.Property<int>("UserId")
+                        .HasColumnType("INTEGER");
+
                     b.HasKey("Id");
 
                     b.HasIndex("MedicineId");
+
+                    b.HasIndex("UserId");
 
                     b.ToTable("UserMedicines");
                 });
@@ -97,10 +120,23 @@ namespace Laakelista.Api.Migrations
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
+                    b.HasOne("Laakelista.Api.Models.User", "User")
+                        .WithMany("UserMedicines")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.Navigation("Medicine");
+
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("Laakelista.Api.Models.Medicine", b =>
+                {
+                    b.Navigation("UserMedicines");
+                });
+
+            modelBuilder.Entity("Laakelista.Api.Models.User", b =>
                 {
                     b.Navigation("UserMedicines");
                 });

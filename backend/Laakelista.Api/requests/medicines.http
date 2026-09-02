@@ -31,14 +31,14 @@ DELETE http://localhost:5027/api/medicines/6
 
 
 ### Get medicine by name
-GET http://localhost:5027/api/medicines/search?query=burana&page=1&pageSize=5
+GET http://localhost:5027/api/medicines/search?query=panadol
 
 
 ### Ensimmäinen sivu
 GET http://localhost:5027/api/medicines/search?query=burana&page=1&pageSize=5
 
 ### Toinen sivu
-GET http://localhost:5027/api/medicines/search?query=burana&page=2&pageSize=5
+GET http://localhost:5027/api/medicines/search?query=burana&page=2
 
 ### Liian suuri pageSize
 GET http://localhost:5027/api/medicines/search?query=burana&page=1&pageSize=101

@@ -1,13 +1,48 @@
 ### Get all
 GET http://localhost:5027/api/usermedicines
 
-### Add new medicine
+### Add new medicine to user 1
 POST http://localhost:5027/api/usermedicines
 Content-Type: application/json
 
 {
+    "userId" : 1,
     "medicineId": 1195,
     "purpose": "Päänsärky",
-    "dosage": "1 tabletti tarvittaessa",
-    "notes": "Enintään 3 tablettia päivässä"
+    "dosage": "400 mg tarvittaessa",
+    "notes": "Ruokailun yhteydessä"
+}
+
+### Add new medicine to user
+POST http://localhost:5027/api/usermedicines
+Content-Type: application/json
+
+{
+    "userId" : 1,
+    "medicineId": 826,
+    "purpose": "Päänsärky",
+    "dosage": "1 tabletti enintään 3 kertaa vuorokaudessa",
+    "notes": null
+}
+
+### Hae käyttäjän 1 lääkkeet
+GET http://localhost:5027/api/usermedicines?userId=1
+
+
+### Hae käyttäjän 2 lääkkeet
+GET http://localhost:5027/api/usermedicines?userId=2
+
+### Hae lääke id:llä 1
+GET http://localhost:5027/api/usermedicines/1?userId=1
+
+### Testi
+POST http://localhost:5027/api/usermedicines
+Content-Type: application/json
+
+{
+    "userId": 1,
+    "medicineId": 1195,
+    "purpose": "Testi 2",
+    "dosage": "600 mg",
+    "notes": "Testimerkintä 2"
 }

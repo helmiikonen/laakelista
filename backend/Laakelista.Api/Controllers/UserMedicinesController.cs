@@ -16,17 +16,17 @@ public class UserMedicinesController : ControllerBase
     }
 
     [HttpGet]
-    public async Task<ActionResult<IEnumerable<UserMedicineResponse>>> GetUserMedicines()
+    public async Task<ActionResult<IEnumerable<UserMedicineResponse>>> GetUserMedicines(int userId)
     {
-        var userMedicines = await _userMedicineService.GetAllAsync();
+        var userMedicines = await _userMedicineService.GetAllAsync(userId);
 
         return Ok(userMedicines);
     }
 
     [HttpGet("{id}")]
-    public async Task<ActionResult<UserMedicineResponse>> GetUserMedicine(int id)
+    public async Task<ActionResult<UserMedicineResponse>> GetUserMedicine(int id, int userId)
     {
-        var userMedicine = await _userMedicineService.GetByIdAsync(id);
+        var userMedicine = await _userMedicineService.GetByIdAsync(id, userId);
 
         if (userMedicine is null)
         {
@@ -69,9 +69,9 @@ public class UserMedicinesController : ControllerBase
     }
 
     [HttpDelete("{id}")]
-    public async Task<IActionResult> DeleteUserMedicine(int id)
+    public async Task<IActionResult> DeleteUserMedicine(int id, int userId)
     {
-        var deleted = await _userMedicineService.DeleteAsync(id);
+        var deleted = await _userMedicineService.DeleteAsync(id, userId);
 
         if (!deleted)
         {

@@ -14,16 +14,20 @@ public class UserMedicineService
         _context = context;
     }
 
-    public async Task<List<UserMedicineResponse>> GetAllAsync(string userId)
+    public async Task<List<UserMedicineResponse>> GetAllAsync(int userId)
     {
         var userMedicines = await _context.UserMedicines
+            .Include(userMedicine => userMedicine.Medicine)
             .Where(userMedicine => userMedicine.UserId == userId)
             .ToListAsync();
 
         return userMedicines.Select(userMedicine => new UserMedicineResponse
         {
             Id = userMedicine.Id,
+            UserId = userMedicine.UserId,
             MedicineId = userMedicine.MedicineId,
+            MedicineName = userMedicine.Medicine.Name,
+            MedicineStrength = userMedicine.Medicine.Strength,
             Purpose = userMedicine.Purpose,
             Dosage = userMedicine.Dosage,
             Notes = userMedicine.Notes
@@ -32,9 +36,10 @@ public class UserMedicineService
 
     public async Task<UserMedicineResponse?> GetByIdAsync(
         int id,
-        string userId)
+        int userId)
     {
         var userMedicine = await _context.UserMedicines
+            .Include(userMedicine => userMedicine.Medicine)
             .FirstOrDefaultAsync(userMedicine =>
                 userMedicine.Id == id &&
                 userMedicine.UserId == userId);
@@ -47,7 +52,10 @@ public class UserMedicineService
         return new UserMedicineResponse
         {
             Id = userMedicine.Id,
+            UserId = userMedicine.UserId,
             MedicineId = userMedicine.MedicineId,
+            MedicineName = userMedicine.Medicine.Name,
+            MedicineStrength = userMedicine.Medicine.Strength,
             Purpose = userMedicine.Purpose,
             Dosage = userMedicine.Dosage,
             Notes = userMedicine.Notes
@@ -57,10 +65,18 @@ public class UserMedicineService
     public async Task<UserMedicineResponse?> CreateAsync(
         CreateUserMedicineRequest request)
     {
-        var medicineExists = await _context.Medicines
-            .AnyAsync(medicine => medicine.Id == request.MedicineId);
+        var medicine = await _context.Medicines
+            .FirstOrDefaultAsync(medicine => medicine.Id == request.MedicineId);
 
-        if (!medicineExists)
+        if (medicine is null)
+        {
+            return null;
+        }
+
+        var userExists = await _context.Users
+            .AnyAsync(user => user.Id == request.UserId);
+
+        if (!userExists)
         {
             return null;
         }
@@ -81,7 +97,10 @@ public class UserMedicineService
         return new UserMedicineResponse
         {
             Id = userMedicine.Id,
+            UserId = userMedicine.UserId,
             MedicineId = userMedicine.MedicineId,
+            MedicineName = medicine.Name,
+            MedicineStrength = medicine.Strength,
             Purpose = userMedicine.Purpose,
             Dosage = userMedicine.Dosage,
             Notes = userMedicine.Notes
@@ -92,7 +111,10 @@ public class UserMedicineService
         int id,
         UpdateUserMedicineRequest request)
     {
-        var userMedicine = await _context.UserMedicines.FindAsync(id);
+        var userMedicine = await _context.UserMedicines
+            .FirstOrDefaultAsync(userMedicine => 
+                userMedicine.Id == id &&
+                userMedicine.UserId == request.UserId);
 
         if (userMedicine is null)
         {
@@ -107,7 +129,6 @@ public class UserMedicineService
             return false;
         }
 
-        userMedicine.UserId = request.UserId;
         userMedicine.MedicineId = request.MedicineId;
         userMedicine.Purpose = request.Purpose;
         userMedicine.Dosage = request.Dosage;
@@ -118,9 +139,12 @@ public class UserMedicineService
         return true;
     }
 
-    public async Task<bool> DeleteAsync(int id)
+    public async Task<bool> DeleteAsync(int id, int userId)
     {
-        var userMedicine = await _context.UserMedicines.FindAsync(id);
+        var userMedicine = await _context.UserMedicines
+            .FirstOrDefaultAsync(userMedicine =>
+                userMedicine.Id == id &&
+                userMedicine.UserId == userId);
 
         if (userMedicine is null)
         {

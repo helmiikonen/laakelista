@@ -10,6 +10,8 @@ public class Medicine
 
     public string? ActiveIngredient { get; set; }
 
+    public string? Strength { get; set; }
+
     public string? AtcCode { get; set; }
 
     public string? AtcName { get; set; }

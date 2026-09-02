@@ -23,6 +23,9 @@ public class FimeaMedicine
     [XmlElement("Kauppanimi")]
     public string Name { get; set; } = string.Empty;
 
+    [XmlElement("Vahvuus")]
+    public string? Strength { get; set; }
+
     [XmlElement("ATC-koodi")]
     public FimeaCodeValue? AtcCode { get; set; }
 

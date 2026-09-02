@@ -1,0 +1,16 @@
+### Luodaan uusi käyttäjä
+
+POST http://localhost:5027/api/users
+Content-Type: application/json
+
+{
+    "name": "Käyttäjä 3"
+}
+
+
+### Hae kaikki käyttäjät
+GET http://localhost:5027/api/users
+
+
+### Hae yksittäinen käyttäjä id:llä
+GET http://localhost:5027/api/users/1

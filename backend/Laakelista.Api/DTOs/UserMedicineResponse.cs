@@ -10,6 +10,8 @@ public class UserMedicineResponse
 
     public string MedicineName { get; set; } = string.Empty;
 
+    public string MedicineStrength { get; set; } = string.Empty;
+
     public string Purpose { get; set; } = string.Empty;
 
     public string Dosage { get; set; } = string.Empty;

@@ -52,7 +52,8 @@ public class MedicineService
   {
     var query = _context.Medicines
         .Where(medicine =>
-            medicine.Name.ToLower().Contains(name.ToLower()));
+            medicine.Name.ToLower().Contains(name.ToLower()) ||
+            medicine.ActiveIngredient.ToLower().Contains(name.ToLower()));
 
     var totalCount = await query.CountAsync();
 
@@ -67,7 +68,8 @@ public class MedicineService
         Id = medicine.Id,
         Name = medicine.Name,
         ActiveIngredient = medicine.ActiveIngredient,
-        Strength = medicine.Strength
+        Strength = medicine.Strength,
+        DosageForm = medicine.DosageForm
     }).ToList();
 
     return new PagedResult<MedicineResponse>
@@ -93,7 +95,8 @@ public class MedicineService
             Id = medicine.Id,
             Name = medicine.Name,
             ActiveIngredient = medicine.ActiveIngredient,
-            Strength = medicine.Strength
+            Strength = medicine.Strength,
+            DosageForm = medicine.DosageForm
         };
     }
 

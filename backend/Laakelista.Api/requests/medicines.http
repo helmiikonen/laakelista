@@ -45,3 +45,6 @@ GET http://localhost:5027/api/medicines/search?query=burana&page=1&pageSize=101
 
 ### Virheellinen sivunumero
 GET http://localhost:5027/api/medicines/search?query=burana&page=0&pageSize=10
+
+### Testi
+GET http://localhost:5027/api/medicines/search?query=burana&page=1&pageSize=20

@@ -12,6 +12,8 @@ public class UserMedicineResponse
 
     public string MedicineStrength { get; set; } = string.Empty;
 
+    public string MedicineDosageForm { get; set; } = string.Empty;
+
     public string Purpose { get; set; } = string.Empty;
 
     public string Dosage { get; set; } = string.Empty;

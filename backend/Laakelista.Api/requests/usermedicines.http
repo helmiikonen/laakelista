@@ -41,8 +41,8 @@ Content-Type: application/json
 
 {
     "userId": 1,
-    "medicineId": 1195,
-    "purpose": "Testi 2",
-    "dosage": "600 mg",
-    "notes": "Testimerkintä 2"
+    "medicineId": 2839,
+    "purpose": "päänsärkyyn",
+    "dosage": "1-2 tablettia tarvittaessa",
+    "notes": ""
 }

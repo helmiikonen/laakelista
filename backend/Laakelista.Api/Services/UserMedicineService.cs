@@ -28,6 +28,7 @@ public class UserMedicineService
             MedicineId = userMedicine.MedicineId,
             MedicineName = userMedicine.Medicine.Name,
             MedicineStrength = userMedicine.Medicine.Strength,
+            MedicineDosageForm = userMedicine.Medicine.DosageForm,
             Purpose = userMedicine.Purpose,
             Dosage = userMedicine.Dosage,
             Notes = userMedicine.Notes
@@ -56,6 +57,7 @@ public class UserMedicineService
             MedicineId = userMedicine.MedicineId,
             MedicineName = userMedicine.Medicine.Name,
             MedicineStrength = userMedicine.Medicine.Strength,
+            MedicineDosageForm = userMedicine.Medicine.DosageForm,
             Purpose = userMedicine.Purpose,
             Dosage = userMedicine.Dosage,
             Notes = userMedicine.Notes
@@ -101,6 +103,7 @@ public class UserMedicineService
             MedicineId = userMedicine.MedicineId,
             MedicineName = medicine.Name,
             MedicineStrength = medicine.Strength,
+            MedicineDosageForm = userMedicine.Medicine.DosageForm,
             Purpose = userMedicine.Purpose,
             Dosage = userMedicine.Dosage,
             Notes = userMedicine.Notes

@@ -4,6 +4,9 @@ Kyseessä on web-sovellus, jonka tarkoituksena on mahdollistaa käyttäjälle om
 
 Projektin backend on toteutettu ASP.NET Corella ja tietokantana käytetään SQLitea. Lääkevalmisteiden perustiedot haetaan Fimean Perusrekisteri XML -aineistosta.
 
+Frontend on toteutettu React/Typescript-pohjaisena. Ensimmäisessä versiossa käyttöliittymän ulkoasuun ei ole vielä kiinnitetty huomiota.
+
+
 ## Suunnitellut ominaisuudet
 
 Tavoitteena on toteuttaa ainakin seuraavat ominaisuudet:
@@ -130,16 +133,26 @@ API tukee tällä hetkellä käyttäjän lääkkeiden:
 
 Tietokannan hallintaan käytetään Entity Framework Corea ja EF Core -migraatioita.
 
-Tähän mennessä tietokantaan on tehty esimerkiksi seuraavat migraatiot:
 
-```text
-InitialCreate
-AddMedication
-AddFimeaMedicineFields
-RenameMedicationToUserMedicine
-```
+## Käyttöliittymän toiminnallisuus
 
-Aluksi nimellä `Medication` luotu entiteetti uudelleennimettiin myöhemmin selkeyden vuoksi `UserMedicine`-nimiseksi. Koska vanhaan `Medications`-tauluun ei ollut vielä tallennettu käyttäjätietoja, taulu voitiin tässä kehitysvaiheessa poistaa ja luoda tilalle uusi `UserMedicines`-taulu.
+Frontendissä käyttäjä on toistaiseksi kovakoodattu käyttäjäksi 1. Varsinaista kirjautumista ja käyttäjähallintaa ei ole vielä toteutettu, se tehdään myöhemmässä vaiheessa.
+
+Hakuun liittyvät toiminnot:
+
+* Lääkkeiden haku valmisteen nimen tai vaikuttavan aineen perusteella
+* Hakutulosten näyttäminen listana
+* Hakutulosten paginointi ja tieto hakutulosten kokonaismäärästä
+* Ilmoitus, jos haku ei tuota tuloksia
+
+Lääkelistaan liittyvät toiminnot:
+
+* Lääkkeen lisäys käyttäjän omalle lääkelistalle (valmiste, käyttötarkoitus, annostus, muistiinpanot)
+* Käyttäjän oman lääkelistan näyttäminen
+* Mahdollisuus tarkastella yksittäisen lääkkeen tietoja tarkemmin
+* Lääkelistalla olevan lääkkeen tietojen muokkaus
+* Lääkkeen poisto omalta listalta
+
 
 ## Teknologiat
 
@@ -153,56 +166,75 @@ Backend:
 * REST API
 * XML / `XmlSerializer`
 
+Frontend:
+
+* React
+* TypeScript
+* Vite
+* REST API -yhteys backendiin
+
 Data:
 
 * Fimean Perusrekisteri XML https://fimea.fi/laakehaut_ja_luettelot/perusrekisteri-xml
 
+
 ## Projektin rakenne
 
-Projektin backendin rakenne on tällä hetkellä pääpiirteissään:
+Projektin rakenne on tällä hetkellä pääpiirteissään:
 
 ```text
-Laakelista.Api/
-├── Controllers/
-│   ├── FimeaController.cs
-│   ├── MedicinesController.cs
-│   └── UserMedicinesController.cs
+laakelista/
+├── backend/
+│   └── Laakelista.Api/
+│       ├── Controllers/
+│       │   ├── FimeaController.cs
+│       │   ├── MedicinesController.cs
+│       │   └── UserMedicinesController.cs
+│       ├── Data/
+│       │   └── LaakelistaDbContext.cs
+│       ├── DTOs/
+│       │   ├── CreateMedicineRequest.cs
+│       │   ├── CreateUserMedicineRequest.cs
+│       │   ├── MedicineResponse.cs
+│       │   ├── PagedResult.cs
+│       │   ├── UpdateMedicineRequest.cs
+│       │   ├── UpdateUserMedicineRequest.cs
+│       │   └── UserMedicineResponse.cs
+│       ├── Fimea/
+│       │   ├── FimeaModels.cs
+│       │   └── FimeaImportService.cs
+│       ├── Migrations/
+│       ├── Models/
+│       │   ├── Medicine.cs
+│       │   ├── User.cs
+│       │   └── UserMedicine.cs
+│       ├── Services/
+│       │   ├── MedicineService.cs
+│       │   └── UserMedicineService.cs
+│       └── laakelista.db
 │
-├── Data/
-│   └── LaakelistaDbContext.cs
-│
-├── DTOs/
-│   ├── CreateMedicineRequest.cs
-│   ├── CreateUserMedicineRequest.cs
-│   ├── MedicineResponse.cs
-│   ├── PagedResult.cs
-│   ├── UpdateMedicineRequest.cs
-│   ├── UpdateUserMedicineRequest.cs
-│   └── UserMedicineResponse.cs
-│
-├── Fimea/
-│   ├── FimeaModels.cs
-│   └── FimeaImportService.cs
-│
-├── Migrations/
-│
-├── Models/
-│   ├── Medicine.cs
-│   ├── User.cs
-│   └── UserMedicine.cs
-│
-├── Services/
-│   ├── MedicineService.cs
-│   └── UserMedicineService.cs
-│
-└── laakelista.db
+└── frontend/
+    ├── src/
+    │   ├── components/
+    │   │   ├── AddUserMedicineForm.tsx
+    │   │   ├── EditUserMedicineForm.tsx
+    │   │   ├── MedicineCard.tsx
+    │   │   ├── UserMedicineCard.tsx
+    │   │   └── UserMedicineList.tsx    
+    │   ├── api.ts
+    │   ├── types.ts
+    │   ├── App.tsx
+    │   └── ...
+    └── ...
 ```
+
 
 ## Seuraavat kehitysvaiheet
 
+* Käyttöliittymän ulkoasun parantaminen
 * Käyttäjän ja käyttäjätilien toteuttaminen
 * Käyttäjän tunnistaminen ja kirjautuminen
-* Frontendin toteuttaminen (React)
+
 
 ## Tekoälyn käyttö projektissa
 

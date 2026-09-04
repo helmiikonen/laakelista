@@ -2,9 +2,11 @@
 
 Kyseessä on web-sovellus, jonka tarkoituksena on mahdollistaa käyttäjälle oman lääkityslistan ylläpitäminen. Sovelluksessa käyttäjä voi lisätä lääkelistalleen käyttämänsä lääkkeet, niiden annostukset ja käyttötarkoitukset.
 
+Sovellus on työn alla ja seuraavina kehitysvaiheina ovat käyttöliittymän ulkoasun parantaminen sekä käyttäjätilien ja kirjautumistoimintojen toteuttaminen.
+
 Projektin backend on toteutettu ASP.NET Corella ja tietokantana käytetään SQLitea. Lääkevalmisteiden perustiedot haetaan Fimean Perusrekisteri XML -aineistosta.
 
-Frontend on toteutettu React/Typescript-pohjaisena. Ensimmäisessä versiossa käyttöliittymän ulkoasuun ei ole vielä kiinnitetty huomiota.
+Frontend on toteutettu React/Typescript-pohjaisena ja käyttöliittymäelementit ja tyylit toteutetaan Material UI-kirjaston avulla. 
 
 
 ## Suunnitellut ominaisuudet
@@ -172,10 +174,7 @@ Frontend:
 * TypeScript
 * Vite
 * REST API -yhteys backendiin
-
-Data:
-
-* Fimean Perusrekisteri XML https://fimea.fi/laakehaut_ja_luettelot/perusrekisteri-xml
+* Material UI
 
 
 ## Projektin rakenne
@@ -228,12 +227,51 @@ laakelista/
     └── ...
 ```
 
+## Fimea-aineiston tuonti
 
-## Seuraavat kehitysvaiheet
+Sovellus käyttää Fimean Perusrekisteri XML -aineistoa lääkkeiden perustietojen lähteenä.
 
-* Käyttöliittymän ulkoasun parantaminen
-* Käyttäjän ja käyttäjätilien toteuttaminen
-* Käyttäjän tunnistaminen ja kirjautuminen
+XML-tiedosto sijoitetaan backend-projektissa hakemistoon:
+
+``backend/Laakelista.Api/FimeaData/perusrekisteri.xml``
+
+Aineistoa ei ole kuitenkaan tallennettu GitHub-repositorioon, koska XML-tiedosto on suuri.
+
+Aineisto löytyy internetistä osoitteesta ``https://fimea.fi/laakehaut_ja_luettelot/perusrekisteri-xml``
+
+
+## Sovelluksen käynnistäminen
+
+### Backend
+
+Siirry backend-projektin kansioon:
+
+``cd backend/Laakelista.Api``
+
+Käynnistä sovellus:
+
+``dotnet run``
+
+Backend käynnistyy paikallisesti ASP.NET Coren määrittämään osoitteeseen.
+
+### Frontend
+
+Siirry frontend-kansioon:
+
+``cd frontend``
+
+Asenna riippuvuudet:
+
+``npm install``
+
+Käynnistä kehityspalvelin:
+
+``npm run dev``
+
+Frontend käynnistyy Viten kehityspalvelimelle, oletuksena osoitteeseen:
+
+http://localhost:5173
+
 
 
 ## Tekoälyn käyttö projektissa

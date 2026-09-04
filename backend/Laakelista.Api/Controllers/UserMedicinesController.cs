@@ -37,20 +37,28 @@ public class UserMedicinesController : ControllerBase
     }
 
     [HttpPost]
-    public async Task<ActionResult<UserMedicineResponse>> CreateUserMedicine(
+    public async Task<ActionResult<UserMedicineCreateResult>> CreateUserMedicine(
         CreateUserMedicineRequest request)
     {
-        var userMedicine = await _userMedicineService.CreateAsync(request);
+        var result = await _userMedicineService.CreateAsync(request);
 
-        if (userMedicine is null)
+        if (result is null)
         {
             return NotFound("Medicine not found.");
         }
 
+        if (result.AlreadyExists)
+        {
+            return Conflict(new
+            {
+                message = "Tämä lääke on jo lääkityslistallasi."
+            });
+        }
+
         return CreatedAtAction(
             nameof(GetUserMedicine),
-            new { id = userMedicine.Id },
-            userMedicine);
+            new { id = result.UserMedicine!.Id, userId = request.UserId },
+            result);
     }
 
     [HttpPut("{id}")]

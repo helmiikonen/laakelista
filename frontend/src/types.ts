@@ -20,6 +20,8 @@ export type UserMedicine = {
   medicineId: number
   medicineName: string
   medicineStrength: string
+  activeIngredient: string
+  medicineDosageForm: string
   purpose: string
   dosage: string
   notes: string | null

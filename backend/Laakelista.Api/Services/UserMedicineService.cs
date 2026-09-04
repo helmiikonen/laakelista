@@ -29,6 +29,7 @@ public class UserMedicineService
             MedicineName = userMedicine.Medicine.Name,
             MedicineStrength = userMedicine.Medicine.Strength,
             MedicineDosageForm = userMedicine.Medicine.DosageForm,
+            ActiveIngredient = userMedicine.Medicine.ActiveIngredient,
             Purpose = userMedicine.Purpose,
             Dosage = userMedicine.Dosage,
             Notes = userMedicine.Notes
@@ -58,13 +59,14 @@ public class UserMedicineService
             MedicineName = userMedicine.Medicine.Name,
             MedicineStrength = userMedicine.Medicine.Strength,
             MedicineDosageForm = userMedicine.Medicine.DosageForm,
+            ActiveIngredient = userMedicine.Medicine.ActiveIngredient,
             Purpose = userMedicine.Purpose,
             Dosage = userMedicine.Dosage,
             Notes = userMedicine.Notes
         };
     }
 
-    public async Task<UserMedicineResponse?> CreateAsync(
+    public async Task<UserMedicineCreateResult?> CreateAsync(
         CreateUserMedicineRequest request)
     {
         var medicine = await _context.Medicines
@@ -83,6 +85,19 @@ public class UserMedicineService
             return null;
         }
 
+        var alreadyExists = await _context.UserMedicines
+            .AnyAsync(userMedicine =>
+                userMedicine.UserId == request.UserId &&
+                userMedicine.MedicineId == request.MedicineId);
+
+        if (alreadyExists)
+        {
+            return new UserMedicineCreateResult
+            {
+                AlreadyExists = true
+            };
+        }
+
         var userMedicine = new UserMedicine
         {
             UserId = request.UserId,
@@ -96,17 +111,22 @@ public class UserMedicineService
 
         await _context.SaveChangesAsync();
 
-        return new UserMedicineResponse
+        return new UserMedicineCreateResult
         {
-            Id = userMedicine.Id,
-            UserId = userMedicine.UserId,
-            MedicineId = userMedicine.MedicineId,
-            MedicineName = medicine.Name,
-            MedicineStrength = medicine.Strength,
-            MedicineDosageForm = userMedicine.Medicine.DosageForm,
-            Purpose = userMedicine.Purpose,
-            Dosage = userMedicine.Dosage,
-            Notes = userMedicine.Notes
+            UserMedicine = new UserMedicineResponse
+            {
+                Id = userMedicine.Id,
+                UserId = userMedicine.UserId,
+                MedicineId = userMedicine.MedicineId,
+                MedicineName = medicine.Name,
+                ActiveIngredient = medicine.ActiveIngredient,
+                MedicineStrength = medicine.Strength,
+                MedicineDosageForm = medicine.DosageForm,
+                Purpose = userMedicine.Purpose,
+                Dosage = userMedicine.Dosage,
+                Notes = userMedicine.Notes
+            },
+            AlreadyExists = false
         };
     }
 

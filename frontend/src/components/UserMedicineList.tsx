@@ -1,11 +1,15 @@
+import { useState } from "react"
+import Grid from "@mui/material/Grid"
+import Typography from "@mui/material/Typography"
+import Button from "@mui/material/Button"
+
 import type { UserMedicine } from "../types"
 import UserMedicineCard from "./UserMedicineCard"
-import { useState } from "react"
 
 type UserMedicineListProps = {
   userMedicines: UserMedicine[]
   onEdit: (userMedicine: UserMedicine) => void
-  onDelete: (id: number) => void
+  onDelete: (userMedicine: UserMedicine) => void
 }
 
 function UserMedicineList({
@@ -13,11 +17,10 @@ function UserMedicineList({
   onEdit,
   onDelete,
 }: UserMedicineListProps) {
-
   const [open, setOpen] = useState(0)
 
   const handleOpenMedicine = (id: number) => {
-    if (id != open) {
+    if (id !== open) {
       setOpen(id)
     } else {
       setOpen(0)
@@ -26,30 +29,55 @@ function UserMedicineList({
 
   return (
     <div>
-      <h2>Omat lääkkeet</h2>
+      <Typography variant="h5" sx={{ mb: 2 }}>
+        Omat lääkkeet
+      </Typography>
 
       {userMedicines.length === 0 ? (
-        <p>Lääkelistasi on tyhjä.</p>
+        <Typography>
+          Lääkelistasi on tyhjä.
+        </Typography>
       ) : (
-        userMedicines.map((userMedicine) => (
-          <div>
-            <p>
-              {userMedicine.medicineName} {userMedicine.medicineStrength}
-            </p>
-            <button onClick={() => handleOpenMedicine(userMedicine.id)}>{open == userMedicine.id ? "Sulje" : "Näytä lisätiedot"}</button>
-            {open == userMedicine.id ? 
-              <UserMedicineCard
-                key={userMedicine.id}
-                userMedicine={userMedicine}
-                onEdit={onEdit}
-                onDelete={onDelete}
-              />
-              : <></>
-            }
-            
-          </div>
-          
-        ))
+        <Grid container spacing={1}>
+          {userMedicines.map((userMedicine) => (
+            <Grid
+              key={userMedicine.id}
+              size={12}
+              
+            >
+              <Grid
+                container
+                sx={{display: "flex", justifyContent: "left"}}
+                spacing={2}
+              >
+                <Grid size={8}>
+                  <Typography>
+                    {userMedicine.medicineName} {userMedicine.medicineStrength}
+                  </Typography>
+                </Grid>
+
+                <Grid size={4}>
+                  <Button
+                    variant="outlined"
+                    onClick={() => handleOpenMedicine(userMedicine.id)}
+                  >
+                    {open === userMedicine.id
+                      ? "Sulje"
+                      : "Näytä lisätiedot"}
+                  </Button>
+                </Grid>
+              </Grid>
+
+              {open === userMedicine.id && (
+                <UserMedicineCard
+                  userMedicine={userMedicine}
+                  onEdit={onEdit}
+                  onDelete={onDelete}
+                />
+              )}
+            </Grid>
+          ))}
+        </Grid>
       )}
     </div>
   )

@@ -1,17 +1,5 @@
 import "./App.css"
-import MedicineCard from "./components/MedicineCard"
 import { useState, useEffect } from "react"
-import { 
-  Typography, 
-  TextField, 
-  Button, 
-  Box,
-  Dialog,
-  DialogTitle,
-  DialogContent,
-  DialogContentText,
-  DialogActions
-} from '@mui/material';
 import { 
   searchMedicines, 
   addUserMedicine, 
@@ -20,17 +8,23 @@ import {
   deleteUserMedicine 
 } from "./api"
 import type { Medicine, UserMedicine } from "./types"
+import SearchMedicine from "./components/SearchMedicine"
 import UserMedicineList from "./components/UserMedicineList"
-import AddUserMedicineForm from "./components/AddUserMedicineForm"
-import EditUserMedicineForm from "./components/EditUserMedicineForm"
+import DuplicateMedicineDialog from "./components/DuplicateMedicineDialog"
+import DeleteMedicineDialog from "./components/DeleteMedicineDialog"
+import AddMedicineDialog from "./components/AddMedicineDialog"
+import EditMedicineDialog from "./components/EditMedicineDialog";
+import SearchResults from "./components/SearchResults"
 
 function App() {
   const [search, setSearch] = useState("")
   const [searchedTerm, setSearchedTerm] = useState("")
+  const [searching, setSearching] = useState(false)
   const [medicines, setMedicines] = useState<Medicine[]>([])
   const [error, setError] = useState("")
   const [page, setPage] = useState(1);
   const [totalCount, setTotalCount] = useState(0);
+  const [loadingUserMedicines, setLoadingUserMedicines] = useState(true)
   const [userMedicines, setUserMedicines] = useState<UserMedicine[]>([])
   const [selectedMedicine, setSelectedMedicine] = useState<Medicine | null>(null)
   const [editingUserMedicine, setEditingUserMedicine] = useState<UserMedicine | null>(null)
@@ -38,6 +32,8 @@ function App() {
   const [duplicateMedicine, setDuplicateMedicine] = useState<Medicine | null>(null)
   
   const userId = 1 // tilapäisesti
+
+  const pageSize = 10
 
   useEffect(() => {
     loadUserMedicines()
@@ -52,14 +48,14 @@ function App() {
 
     try {
       await addUserMedicine({
-        userId: 1,
+        userId: userId,
         medicineId: selectedMedicine.id,
         purpose,
         dosage,
         notes: notes || null,
       })
-
       setSelectedMedicine(null)
+      handleReset()
       await loadUserMedicines()
     } catch (error) {
       if (
@@ -70,7 +66,6 @@ function App() {
         setDuplicateMedicine(selectedMedicine)
         return
       }
-
       setError("Lääkkeen lisääminen epäonnistui.")
     }
   }
@@ -79,22 +74,22 @@ function App() {
     const alreadyExists = userMedicines.some(
       userMedicine => userMedicine.medicineId === medicine.id
     )
-
     if (alreadyExists) {
       setDuplicateMedicine(medicine)
       return
     }
-
     setSelectedMedicine(medicine)
-    handleReset()
   }
 
   async function loadUserMedicines() {
     try {
+      setLoadingUserMedicines(true)
       const res = await getUserMedicines(userId)
       setUserMedicines(res)
     } catch {
       setError("Lääkityslistan hakeminen epäonnistui.")
+    } finally {
+      setLoadingUserMedicines(false)
     }
   }
 
@@ -102,19 +97,18 @@ function App() {
     if (!search.trim()) {
       return
     }
-
     try {
       setError("")
-
-      searchMedicines(search, pageNumber).then(res => {
+      setSearching(true)
+      searchMedicines(search, pageNumber, pageSize).then(res => {
         setTotalCount(res.totalCount)
         setMedicines(res.items ?? res)
       })
-      
     } catch {
       setError("Lääkkeiden haku epäonnistui.")
-    }
-    
+    } finally {
+      setSearching(false)
+    }    
   }
 
   const handleNewSearch = () => {
@@ -201,8 +195,8 @@ function App() {
           notes: notes || null,
         }
       )
-
       setEditingUserMedicine(null)
+      handleReset()
       await loadUserMedicines()
     } catch {
       setError("Lääkkeen muokkaaminen epäonnistui.")
@@ -215,181 +209,55 @@ function App() {
       
       <UserMedicineList
         userMedicines={userMedicines}
+        loading={loadingUserMedicines}
         onEdit={handleEdit}
         onDelete={handleClickDelete}
       />
 
-      <div className="search">
-        
+      <SearchMedicine
+        search={search}
+        onSearchChange={setSearch}
+        onSearch={handleNewSearch}
+        onReset={handleReset}
+      />
 
-        <Typography variant="body1">Lisää uusi lääke</Typography>
-        <Box 
-          id="search-row"
-          sx={{
-            padding: 2, 
-            margin: 1, 
-            display: "flex", 
-            flexDirection: "row", 
-            justifyContent: "left",
-          }}
-        >
-          
-          <TextField 
-            sx={{marginX: 1, minWidth: 400}}
-            id="medicine-search" 
-            label="Hae nimellä tai vaikuttavalla aineella" 
-            variant="outlined"
-            value={search}
-            type="search"
-            onChange={(event) => setSearch(event.target.value)} 
-          />
-          <Button 
-            sx={{marginX: 1}}
-            variant="outlined" 
-            onClick={handleNewSearch}>
-              Hae
-            </Button>
-          <Button 
-            sx={{marginX: 1}}
-            variant="outlined"
-            onClick={handleReset}>
-              Tyhjennä
-            </Button>
-        </Box>
-      </div>
-
-      <Dialog
-        open={selectedMedicine !== null}
+      <AddMedicineDialog
+        medicine={selectedMedicine}
+        onAdd={handleAdd}
         onClose={() => setSelectedMedicine(null)}
-        fullWidth
-        maxWidth="sm"
-      >
-        {selectedMedicine && (
-          <>
-            <DialogTitle>
-              Lisää: {selectedMedicine.name}
-            </DialogTitle>
+      />
 
-            <DialogContent>
-              <AddUserMedicineForm
-                medicine={selectedMedicine}
-                onAdd={handleAdd}
-                onCancel={() => setSelectedMedicine(null)}
-              />
-            </DialogContent>
-          </>
-        )}
-      </Dialog>
-
-      <Dialog
-        open={editingUserMedicine !== null}
+      <EditMedicineDialog 
+        editingUserMedicine={editingUserMedicine}
         onClose={() => setEditingUserMedicine(null)}
-        fullWidth
-        maxWidth="sm"
-      >
-        <DialogTitle>
-          Muokkaa lääkettä
-        </DialogTitle>
+        onSave={handleEditSave}        
+      />
 
-        <DialogContent>
-          {editingUserMedicine && (
-            <EditUserMedicineForm
-              userMedicine={editingUserMedicine}
-              onSave={handleEditSave}
-              onCancel={() => setEditingUserMedicine(null)}
-            />
-          )}
-        </DialogContent>
-      </Dialog>
-
-      <Dialog
-        open={duplicateMedicine !== null}
+      <DuplicateMedicineDialog
+        medicine={duplicateMedicine}
         onClose={() => setDuplicateMedicine(null)}
-      >
-        <DialogTitle>Lääke on jo listallasi</DialogTitle>
+        onEdit={handleDuplicateEdit}
+      />
 
-        <DialogContent>
-          <DialogContentText>
-            {duplicateMedicine?.name} on jo lisättynä lääkityslistallesi.
-            Haluatko muokata sen tietoja?
-          </DialogContentText>
-        </DialogContent>
-
-        <DialogActions>
-          <Button
-            onClick={() => setDuplicateMedicine(null)}
-          >
-            Peruuta
-          </Button>
-
-          <Button
-            variant="contained"
-            onClick={handleDuplicateEdit}
-          >
-            Muokkaa lääkettä
-          </Button>
-        </DialogActions>
-      </Dialog>
-
-      <Dialog 
-        open={deletingUserMedicine != null}
+      <DeleteMedicineDialog
+        open={deletingUserMedicine !== null}
         onClose={() => setDeletingUserMedicine(null)}
-      >
-        <DialogTitle>Olet poistamassa lääkettä</DialogTitle>
-        <DialogContent>
-          <DialogContentText>
-            Haluatko poistaa lääkkeen listaltasi?
-          </DialogContentText>
-          <DialogActions>
-            <Button
-              onClick={() => setDeletingUserMedicine(null)}
-            >
-            Peruuta
-            </Button>
-            <Button
-              onClick={confirmDelete}
-            >
-            Poista
-            </Button>
-          </DialogActions>
-        </DialogContent>
-      </Dialog>
+        onConfirm={confirmDelete}
+      />
 
-      <section className="results">
-        {medicines.length == 0 && searchedTerm != "" ? 
-        <p>Ei tuloksia haulla "{searchedTerm}"</p> : <></>}
-        {medicines.length > 0 ?
-        <>
-          <h2>Haulla löytyi {totalCount} tulosta</h2>
-          {totalCount < 20 ? <p>Näytetään tulokset 1-{totalCount}</p> 
-          : 
-          <div>
-            <p>Näytetään tulokset {((page-1)*20)+1}-{Math.min(page*20, totalCount)}</p> 
-            {<button onClick={handlePreviousPageClick} disabled={page == 1}>Edellinen sivu</button>}
-            {<button onClick={handleNextPageClick} disabled={page >= Math.floor(totalCount/20)+1}>Seuraava sivu</button>}
-            
-          </div>}
-          
-        </> : <></>
-        }
-
-        {error && <p>{error}</p>}
-
-        {medicines.map((medicine) => (
-          <MedicineCard 
-            key={medicine.id}
-            medicine={medicine}
-            onAdd={handleAddClick}
-          />
-        ))}
-
-        {totalCount > 20 ?
-        <div>
-          <button onClick={handlePreviousPageClick} disabled={page == 1}>Edellinen sivu</button>
-          <button onClick={handleNextPageClick} disabled={page >= Math.floor(totalCount/20)+1}>Seuraava sivu</button>
-        </div> 
-        : <></>}
-      </section>
+      <SearchResults 
+        searching={searching}
+        medicines={medicines}
+        searchedTerm={searchedTerm}
+        totalCount={totalCount}
+        pageSize={pageSize}
+        page={page}
+        error={error}
+        handleNextPageClick={handleNextPageClick}
+        handlePreviousPageClick={handlePreviousPageClick}
+        handleAddClick={handleAddClick}
+      />
+      
     </div>
   )
 }

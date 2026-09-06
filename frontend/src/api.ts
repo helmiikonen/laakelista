@@ -5,10 +5,10 @@ import type {
 
 const API_URL = "http://localhost:5027"
 
-export async function searchMedicines(query: string, page: number) {
+export async function searchMedicines(query: string, page: number, pageSize: number) {
   
   const response = await fetch(
-    `${API_URL}/api/medicines/search?query=${encodeURIComponent(query)}&page=${encodeURIComponent(page.toString())}&pageSize=20`
+    `${API_URL}/api/medicines/search?query=${encodeURIComponent(query)}&page=${encodeURIComponent(page.toString())}&pageSize=${encodeURIComponent(pageSize.toString())}`
   )
 
   if (!response.ok) {

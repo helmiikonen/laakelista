@@ -1,19 +1,26 @@
 import { useState } from "react"
-import Grid from "@mui/material/Grid"
-import Typography from "@mui/material/Typography"
-import Button from "@mui/material/Button"
+import { 
+  Grid,
+  Typography,
+  Button,
+  CircularProgress,
+  Box, 
+  Paper
+} from "@mui/material"
 
 import type { UserMedicine } from "../types"
 import UserMedicineCard from "./UserMedicineCard"
 
 type UserMedicineListProps = {
   userMedicines: UserMedicine[]
+  loading: boolean
   onEdit: (userMedicine: UserMedicine) => void
   onDelete: (userMedicine: UserMedicine) => void
 }
 
 function UserMedicineList({
   userMedicines,
+  loading,
   onEdit,
   onDelete,
 }: UserMedicineListProps) {
@@ -32,12 +39,27 @@ function UserMedicineList({
       <Typography variant="h5" sx={{ mb: 2 }}>
         Omat lääkkeet
       </Typography>
-
-      {userMedicines.length === 0 ? (
+      {loading ? 
+        
+        <Box
+          sx={{
+            display: "flex",
+            alignItems: "center",
+            gap: 2,
+          }}
+        >
+          <CircularProgress size={24} />
+          <p>Ladataan lääkkeitä...</p>
+        </Box>
+    : 
+      
+      userMedicines.length === 0 ? (
         <Typography>
           Lääkelistasi on tyhjä.
         </Typography>
       ) : (
+        <Paper elevation={1}
+          sx={{padding:2, margin: 2}}>
         <Grid container spacing={1}>
           {userMedicines.map((userMedicine) => (
             <Grid
@@ -78,6 +100,7 @@ function UserMedicineList({
             </Grid>
           ))}
         </Grid>
+        </Paper>
       )}
     </div>
   )

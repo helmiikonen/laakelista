@@ -5,7 +5,8 @@ import {
   Button,
   CircularProgress,
   Box, 
-  Paper
+  Paper,
+  Divider
 } from "@mui/material"
 
 import type { UserMedicine } from "../types"
@@ -36,7 +37,10 @@ function UserMedicineList({
 
   return (
     <div>
-      <Typography variant="h5" sx={{ mb: 2 }}>
+      <Typography 
+        variant="h5" 
+        sx={{ marginBottom: 2 }}
+      >
         Omat lääkkeet
       </Typography>
       {loading ? 
@@ -58,7 +62,7 @@ function UserMedicineList({
           Lääkelistasi on tyhjä.
         </Typography>
       ) : (
-        <Paper elevation={1}
+        <Paper elevation={2}
           sx={{padding:2, margin: 2}}>
         <Grid container spacing={1}>
           {userMedicines.map((userMedicine) => (
@@ -72,15 +76,17 @@ function UserMedicineList({
                 sx={{display: "flex", justifyContent: "left"}}
                 spacing={2}
               >
-                <Grid size={8}>
-                  <Typography>
-                    {userMedicine.medicineName} {userMedicine.medicineStrength}
+                <Grid size={10}>
+                  <Typography className="user-medicine-list" sx={{marginLeft: 2, marginBottom: 1}}>
+                    <strong>{userMedicine.medicineName}</strong> {userMedicine.medicineStrength}
                   </Typography>
+                  <Divider />
                 </Grid>
 
-                <Grid size={4}>
+                <Grid size={2} sx={{display: "flex", justifyContent: "right"}}>
                   <Button
-                    variant="outlined"
+                    variant="text"
+                    sx={{textTransform: "none"}}
                     onClick={() => handleOpenMedicine(userMedicine.id)}
                   >
                     {open === userMedicine.id

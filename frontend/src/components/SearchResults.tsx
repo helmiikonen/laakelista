@@ -1,6 +1,7 @@
 import {
   Typography,
-  Button
+  Button,
+  Box
 } from "@mui/material"
 import type { Medicine } from "../types"
 import MedicineCard from "./MedicineCard"
@@ -34,24 +35,28 @@ function SearchResults({
 return(
 
   <div className="results">
-    {searching ? <p>Haetaan...</p> : 
-    medicines.length == 0 && searchedTerm != "" ? 
-    <Typography variant="body1">Ei tuloksia haulla "{searchedTerm}"</Typography> : <></>}
-    {medicines.length > 0 ?
-    <>
-      <Typography variant="h5">Haulla löytyi {totalCount} tulosta</Typography>
-      {totalCount < pageSize ? 
-        <Typography variant="body1">Näytetään tulokset 1-{totalCount}</Typography> 
-      : 
-      <div>
-        <Typography variant="body1">Näytetään tulokset {((page-1)*pageSize)+1}-{Math.min(page*pageSize, totalCount)}</Typography> 
-        {<Button onClick={handlePreviousPageClick} disabled={page == 1}>Edellinen sivu</Button>}
-        {<Button onClick={handleNextPageClick} disabled={page >= Math.floor(totalCount/pageSize)+1}>Seuraava sivu</Button>}
+    <Box sx={{display:"flex", flexDirection:"column", alignItems: "center"}}>
+      {searching ? <p>Haetaan...</p> : 
+        medicines.length == 0 && searchedTerm != "" ? 
+        <Typography variant="body1">Ei tuloksia haulla "{searchedTerm}"</Typography> : <></>
+      }
+      {medicines.length > 0 ?
+      <>
+        <Typography variant="h5">Haulla löytyi {totalCount} tulosta</Typography>
+        {totalCount < pageSize ? 
+          <Typography variant="body1">Näytetään tulokset 1-{totalCount}</Typography> 
+        : 
+        <div>
+          <Typography variant="body1">Näytetään tulokset {((page-1)*pageSize)+1}-{Math.min(page*pageSize, totalCount)}</Typography> 
+          {<Button onClick={handlePreviousPageClick} disabled={page == 1}>Edellinen sivu</Button>}
+          {<Button onClick={handleNextPageClick} disabled={page >= Math.floor(totalCount/pageSize)+1}>Seuraava sivu</Button>}
+          
+        </div>}
         
-      </div>}
-      
-    </> : <></>
-    }
+      </> : <></>
+      }
+    </Box>
+    
 
     {error && <p>{error}</p>}
 

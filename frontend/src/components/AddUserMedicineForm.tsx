@@ -38,8 +38,18 @@ function AddUserMedicineForm({
       }}
     >
       <Typography variant="body2" color="text.secondary">
+        <strong>Lääkkeen nimi:</strong>{" "}
+        {medicine.name}
+      </Typography>
+      
+      <Typography variant="body2" color="text.secondary">
         <strong>Vahvuus:</strong>{" "}
-        {medicine.strength ?? "Ei ilmoitettu"}
+        {medicine.strength ?? "-"}
+      </Typography>
+
+      <Typography variant="body2" color="text.secondary">
+        <strong>Lääkemuoto:</strong>{" "}
+        {medicine.dosageForm ?? "-"}
       </Typography>
 
       {medicine.activeIngredient && (

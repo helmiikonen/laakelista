@@ -7,6 +7,7 @@ import {
   updateUserMedicine,
   deleteUserMedicine 
 } from "./api"
+import { Box } from "@mui/material"
 import type { Medicine, UserMedicine } from "./types"
 import SearchMedicine from "./components/SearchMedicine"
 import UserMedicineList from "./components/UserMedicineList"
@@ -205,7 +206,12 @@ function App() {
 
   return (
     <div className="app">
-      <h1>Lääkelista</h1>
+      <Box sx={{
+        display: "flex",
+        flexDirection: "column"
+      }}>
+
+      <h1 id="header">Lääkelista</h1>
       
       <UserMedicineList
         userMedicines={userMedicines}
@@ -257,7 +263,7 @@ function App() {
         handlePreviousPageClick={handlePreviousPageClick}
         handleAddClick={handleAddClick}
       />
-      
+    </Box>
     </div>
   )
 }

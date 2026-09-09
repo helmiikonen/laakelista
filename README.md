@@ -215,9 +215,15 @@ laakelista/
 └── frontend/
     ├── src/
     │   ├── components/
+    │   │   ├── AddUserMedicineDialog.tsx
     │   │   ├── AddUserMedicineForm.tsx
+    │   │   ├── DeleteMedicineDialog.tsx
+    │   │   ├── DuplicateMedicineDialog.tsx
+    │   │   ├── EditMedicineDialog.tsx
     │   │   ├── EditUserMedicineForm.tsx
     │   │   ├── MedicineCard.tsx
+    │   │   ├── SearchMedicine.tsx
+    │   │   ├── SearchResults.tsx
     │   │   ├── UserMedicineCard.tsx
     │   │   └── UserMedicineList.tsx    
     │   ├── api.ts

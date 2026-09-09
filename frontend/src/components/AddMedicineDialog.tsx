@@ -32,7 +32,7 @@ function AddMedicineDialog({
       {medicine && (
         <>
           <DialogTitle>
-            Lisää: {medicine.name}
+            Lisää lääkityslistaan
           </DialogTitle>
 
           <DialogContent>

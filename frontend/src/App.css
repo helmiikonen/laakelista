@@ -12,6 +12,14 @@
   margin: 0;
 }
 
+h1, h2, h3, h4, h5, h6, body {
+  text-align: center;
+}
+
+.user-medicine-list {
+  text-align: left;
+}
+
 .my-medicines {
   margin-bottom: 40px;
 }

@@ -14,7 +14,7 @@ function MedicineCard({ medicine, onAdd }: MedicineCardProps) {
       spacing={1} 
       sx={{display: "flex", flexDirection: "row", padding: 1}}>
       <Grid size={8} sx={{display: "flex", flexDirection: "column", justifyContent: "left"}}>
-        <Typography variant="subtitle2">
+        <Typography variant="body1">
           <strong>{medicine.name} {medicine.strength} {medicine.dosageForm}</strong>
         </Typography>
         {medicine.activeIngredient && (

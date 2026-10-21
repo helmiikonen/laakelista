@@ -42,9 +42,9 @@ function SearchMedicine({
         }}
       >
         <Grid 
-          size={{xs: 12, sm: 8}}
+          size={{sm: 12, md: 8}}
           sx={{
-              paddingBottom: 1
+              paddingBottom: 1, minWidth: 400
             }}>
           <TextField
             fullWidth
@@ -61,7 +61,7 @@ function SearchMedicine({
         </Grid>
         
         <Grid 
-          size={{xs: 6, sm: 2}}
+          size={{sm: 6, md: 2}}
           sx={{paddingX: 1}}
         >
           <Button
@@ -75,7 +75,7 @@ function SearchMedicine({
         </Button>
         </Grid>
         <Grid 
-          size={{xs: 6, sm: 2}}
+          size={{sm: 6, md: 2}}
           sx={{paddingRight: 1}}
         >
           <Button

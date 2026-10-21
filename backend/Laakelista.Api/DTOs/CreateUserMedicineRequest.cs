@@ -2,8 +2,6 @@ namespace Laakelista.Api.DTOs;
 
 public class CreateUserMedicineRequest
 {
-    public int UserId { get; set; }
-    
     public int MedicineId { get; set; }
 
     public string Purpose { get; set; } = string.Empty;

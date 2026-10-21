@@ -1,16 +1,38 @@
-### Luodaan uusi käyttäjä
-
-POST http://localhost:5027/api/users
+### Rekisteröi uusi käyttäjä
+POST http://localhost:5027/api/Auth/register
 Content-Type: application/json
 
 {
-    "name": "Käyttäjä 3"
+  "username": "testikettu42",
+  "password": "TestiSalasana123!"
 }
 
 
-### Hae kaikki käyttäjät
-GET http://localhost:5027/api/users
+### Rekisteröi uusi käyttäjä
+POST http://localhost:5027/api/Auth/register
+Content-Type: application/json
+
+{
+  "username": "testikana15",
+  "password": "Kaurapuuro567#"
+}
 
 
-### Hae yksittäinen käyttäjä id:llä
-GET http://localhost:5027/api/users/1
+
+### Kirjaudu sisään
+POST http://localhost:5027/api/Auth/login
+Content-Type: application/json
+
+{
+  "username": "testikettu42",
+  "password": "TestiSalasana123!"
+}
+
+
+### Hae kirjautuneen käyttäjän tiedot
+GET http://localhost:5027/api/Auth/me
+
+
+
+### Kirjaudu ulos
+POST http://localhost:5027/api/Auth/logout

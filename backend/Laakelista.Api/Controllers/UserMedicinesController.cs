@@ -1,32 +1,54 @@
 using Laakelista.Api.DTOs;
 using Laakelista.Api.Services;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
+using Laakelista.Api.Models;
 
 namespace Laakelista.Api.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
+[Authorize]
 public class UserMedicinesController : ControllerBase
 {
     private readonly UserMedicineService _userMedicineService;
+    private readonly UserManager<ApplicationUser> _userManager;
 
-    public UserMedicinesController(UserMedicineService userMedicineService)
+    public UserMedicinesController(
+        UserMedicineService userMedicineService,
+        UserManager<ApplicationUser> userManager)
     {
         _userMedicineService = userMedicineService;
+        _userManager = userManager;
     }
 
     [HttpGet]
-    public async Task<ActionResult<IEnumerable<UserMedicineResponse>>> GetUserMedicines(int userId)
+    public async Task<ActionResult<IEnumerable<UserMedicineResponse>>> GetUserMedicines()
     {
-        var userMedicines = await _userMedicineService.GetAllAsync(userId);
+        var user = await _userManager.GetUserAsync(User);
+
+        if (user is null)
+        {
+            return Unauthorized();
+        }
+
+        var userMedicines = await _userMedicineService.GetAllAsync(user.Id);
 
         return Ok(userMedicines);
     }
 
     [HttpGet("{id}")]
-    public async Task<ActionResult<UserMedicineResponse>> GetUserMedicine(int id, int userId)
+    public async Task<ActionResult<UserMedicineResponse>> GetUserMedicine(int id)
     {
-        var userMedicine = await _userMedicineService.GetByIdAsync(id, userId);
+        var user = await _userManager.GetUserAsync(User);
+
+        if (user is null)
+        {
+            return Unauthorized();
+        }
+
+        var userMedicine = await _userMedicineService.GetByIdAsync(id, user.Id);
 
         if (userMedicine is null)
         {
@@ -40,7 +62,14 @@ public class UserMedicinesController : ControllerBase
     public async Task<ActionResult<UserMedicineCreateResult>> CreateUserMedicine(
         CreateUserMedicineRequest request)
     {
-        var result = await _userMedicineService.CreateAsync(request);
+        var user = await _userManager.GetUserAsync(User);
+
+        if (user is null)
+        {
+            return Unauthorized();
+        }
+
+        var result = await _userMedicineService.CreateAsync(request, user.Id);
 
         if (result is null)
         {
@@ -57,7 +86,7 @@ public class UserMedicinesController : ControllerBase
 
         return CreatedAtAction(
             nameof(GetUserMedicine),
-            new { id = result.UserMedicine!.Id, userId = request.UserId },
+            new { id = result.UserMedicine!.Id },
             result);
     }
 
@@ -66,7 +95,17 @@ public class UserMedicinesController : ControllerBase
         int id,
         UpdateUserMedicineRequest request)
     {
-        var updated = await _userMedicineService.UpdateAsync(id, request);
+        var user = await _userManager.GetUserAsync(User);
+
+        if (user is null)
+        {
+            return Unauthorized();
+        }
+
+        var updated = await _userMedicineService.UpdateAsync(
+            id,
+            request,
+            user.Id);
 
         if (!updated)
         {
@@ -77,9 +116,16 @@ public class UserMedicinesController : ControllerBase
     }
 
     [HttpDelete("{id}")]
-    public async Task<IActionResult> DeleteUserMedicine(int id, int userId)
+    public async Task<IActionResult> DeleteUserMedicine(int id)
     {
-        var deleted = await _userMedicineService.DeleteAsync(id, userId);
+        var user = await _userManager.GetUserAsync(User);
+
+        if (user is null)
+        {
+            return Unauthorized();
+        }
+
+        var deleted = await _userMedicineService.DeleteAsync(id, user.Id);
 
         if (!deleted)
         {
@@ -88,4 +134,5 @@ public class UserMedicinesController : ControllerBase
 
         return NoContent();
     }
+
 }

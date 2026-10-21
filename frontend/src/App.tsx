@@ -5,9 +5,11 @@ import {
   addUserMedicine, 
   getUserMedicines, 
   updateUserMedicine,
-  deleteUserMedicine 
+  deleteUserMedicine,
+  getCurrentUser, 
+  logout
 } from "./api"
-import { Box } from "@mui/material"
+import { Box, Button } from "@mui/material"
 import type { Medicine, UserMedicine } from "./types"
 import SearchMedicine from "./components/SearchMedicine"
 import UserMedicineList from "./components/UserMedicineList"
@@ -16,6 +18,7 @@ import DeleteMedicineDialog from "./components/DeleteMedicineDialog"
 import AddMedicineDialog from "./components/AddMedicineDialog"
 import EditMedicineDialog from "./components/EditMedicineDialog";
 import SearchResults from "./components/SearchResults"
+import AuthForm from "./components/AuthForm"
 
 function App() {
   const [search, setSearch] = useState("")
@@ -31,14 +34,49 @@ function App() {
   const [editingUserMedicine, setEditingUserMedicine] = useState<UserMedicine | null>(null)
   const [deletingUserMedicine, setDeletingUserMedicine] = useState<UserMedicine | null>(null)
   const [duplicateMedicine, setDuplicateMedicine] = useState<Medicine | null>(null)
-  
-  const userId = 1 // tilapäisesti
+  const [currentUser, setCurrentUser] = useState<{
+    id: string
+    userName: string
+  } | null>(null)
+  const [checkingAuth, setCheckingAuth] = useState(true)
 
   const pageSize = 10
 
   useEffect(() => {
-    loadUserMedicines()
-  },[])
+    async function checkAuth() {
+      try {
+        const user = await getCurrentUser()
+        setCurrentUser(user)
+      } catch {
+        setCurrentUser(null)
+      } finally {
+        setCheckingAuth(false)
+      }
+    }
+
+    checkAuth()
+  }, [])
+
+  useEffect(() => {
+    if (!checkingAuth && currentUser) {
+      loadUserMedicines()
+    }
+  }, [currentUser, checkingAuth])
+
+  async function handleLogin() {
+    const user = await getCurrentUser()
+    setCurrentUser(user)
+  }
+
+  async function handleLogout() {
+    try {
+      await logout()
+      setCurrentUser(null)
+      setUserMedicines([])
+    } catch {
+      // Uloskirjautuminen epäonnistui.
+    }
+  }
 
   async function handleAdd(
     purpose: string,
@@ -49,7 +87,6 @@ function App() {
 
     try {
       await addUserMedicine({
-        userId: userId,
         medicineId: selectedMedicine.id,
         purpose,
         dosage,
@@ -85,7 +122,7 @@ function App() {
   async function loadUserMedicines() {
     try {
       setLoadingUserMedicines(true)
-      const res = await getUserMedicines(userId)
+      const res = await getUserMedicines()
       setUserMedicines(res)
     } catch {
       setError("Lääkityslistan hakeminen epäonnistui.")
@@ -151,7 +188,7 @@ function App() {
 
   async function handleDelete(userMedicine: UserMedicine) {
     try {
-      await deleteUserMedicine(userMedicine.id, userId)
+      await deleteUserMedicine(userMedicine.id)
       await loadUserMedicines()
     } catch {
       setError("Lääkkeen poistaminen epäonnistui.")
@@ -189,7 +226,6 @@ function App() {
       await updateUserMedicine(
         editingUserMedicine.id,
         {
-          userId,
           medicineId: editingUserMedicine.medicineId,
           purpose,
           dosage,
@@ -204,6 +240,14 @@ function App() {
     }
   }
 
+  if (checkingAuth) {
+    return <Box sx={{ p: 4, textAlign: "center" }}>Ladataan...</Box>
+  }
+
+  if (!currentUser) {
+    return <AuthForm onLogin={handleLogin} />
+  }
+
   return (
     <div className="app">
       <Box sx={{
@@ -211,7 +255,26 @@ function App() {
         flexDirection: "column"
       }}>
 
-      <h1 id="header">Lääkelista</h1>
+      <Box
+        sx={{
+          display: "flex",
+          justifyContent: "space-between",
+          alignItems: "center",
+          gap: 2,
+          flexWrap: "wrap",
+          mb: 3,
+        }}
+      >
+        <h1 id="header">Lääkelista</h1>
+
+        <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
+          <span>Kirjautunut: {currentUser?.userName}</span>
+
+          <Button variant="outlined" onClick={handleLogout}>
+            Kirjaudu ulos
+          </Button>
+        </Box>
+      </Box>
       
       <UserMedicineList
         userMedicines={userMedicines}

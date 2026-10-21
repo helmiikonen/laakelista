@@ -28,7 +28,6 @@ export type UserMedicine = {
 }
 
 export type CreateUserMedicineRequest = {
-  userId: number
   medicineId: number
   purpose: string
   dosage: string
@@ -36,7 +35,6 @@ export type CreateUserMedicineRequest = {
 }
 
 export type UpdateUserMedicineRequest = {
-  userId: number
   medicineId: number
   purpose: string
   dosage: string

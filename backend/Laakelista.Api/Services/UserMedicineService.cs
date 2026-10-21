@@ -14,7 +14,7 @@ public class UserMedicineService
         _context = context;
     }
 
-    public async Task<List<UserMedicineResponse>> GetAllAsync(int userId)
+    public async Task<List<UserMedicineResponse>> GetAllAsync(Guid userId)
     {
         var userMedicines = await _context.UserMedicines
             .Include(userMedicine => userMedicine.Medicine)
@@ -38,7 +38,7 @@ public class UserMedicineService
 
     public async Task<UserMedicineResponse?> GetByIdAsync(
         int id,
-        int userId)
+        Guid userId)
     {
         var userMedicine = await _context.UserMedicines
             .Include(userMedicine => userMedicine.Medicine)
@@ -67,7 +67,8 @@ public class UserMedicineService
     }
 
     public async Task<UserMedicineCreateResult?> CreateAsync(
-        CreateUserMedicineRequest request)
+        CreateUserMedicineRequest request,
+        Guid userId)
     {
         var medicine = await _context.Medicines
             .FirstOrDefaultAsync(medicine => medicine.Id == request.MedicineId);
@@ -77,17 +78,9 @@ public class UserMedicineService
             return null;
         }
 
-        var userExists = await _context.Users
-            .AnyAsync(user => user.Id == request.UserId);
-
-        if (!userExists)
-        {
-            return null;
-        }
-
         var alreadyExists = await _context.UserMedicines
             .AnyAsync(userMedicine =>
-                userMedicine.UserId == request.UserId &&
+                userMedicine.UserId == userId &&
                 userMedicine.MedicineId == request.MedicineId);
 
         if (alreadyExists)
@@ -100,7 +93,7 @@ public class UserMedicineService
 
         var userMedicine = new UserMedicine
         {
-            UserId = request.UserId,
+            UserId = userId,
             MedicineId = request.MedicineId,
             Purpose = request.Purpose,
             Dosage = request.Dosage,
@@ -132,12 +125,13 @@ public class UserMedicineService
 
     public async Task<bool> UpdateAsync(
         int id,
-        UpdateUserMedicineRequest request)
+        UpdateUserMedicineRequest request,
+        Guid userId)
     {
         var userMedicine = await _context.UserMedicines
-            .FirstOrDefaultAsync(userMedicine => 
+            .FirstOrDefaultAsync(userMedicine =>
                 userMedicine.Id == id &&
-                userMedicine.UserId == request.UserId);
+                userMedicine.UserId == userId);
 
         if (userMedicine is null)
         {
@@ -162,7 +156,7 @@ public class UserMedicineService
         return true;
     }
 
-    public async Task<bool> DeleteAsync(int id, int userId)
+    public async Task<bool> DeleteAsync(int id, Guid userId)
     {
         var userMedicine = await _context.UserMedicines
             .FirstOrDefaultAsync(userMedicine =>

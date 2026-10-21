@@ -4,17 +4,17 @@ public class UserMedicineResponse
 {
     public int Id { get; set; }
 
-    public int UserId { get; set; }
+    public Guid UserId { get; set; }
 
     public int MedicineId { get; set; }
 
     public string MedicineName { get; set; } = string.Empty;
 
-    public string MedicineStrength { get; set; } = string.Empty;
+    public string? MedicineStrength { get; set; } = string.Empty;
 
-    public string MedicineDosageForm { get; set; } = string.Empty;
+    public string? MedicineDosageForm { get; set; } = string.Empty;
 
-    public string ActiveIngredient { get; set; } = string.Empty;
+    public string? ActiveIngredient { get; set; } = string.Empty;
 
     public string Purpose { get; set; } = string.Empty;
 

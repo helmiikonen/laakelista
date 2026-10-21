@@ -1,159 +1,43 @@
 # Lääkelista-sovellus
 
-Kyseessä on web-sovellus, jonka tarkoituksena on mahdollistaa käyttäjälle oman lääkityslistan ylläpitäminen. Sovelluksessa käyttäjä voi lisätä lääkelistalleen käyttämänsä lääkkeet, niiden annostukset ja käyttötarkoitukset.
+Kyseessä on web-sovellus, jonka tarkoituksena on mahdollistaa käyttäjälle oman lääkityslistan ylläpitäminen. Sovelluksessa kirjautunut käyttäjä voi lisätä lääkelistalleen käyttämänsä lääkkeet, niiden annostukset ja käyttötarkoitukset.
 
-Sovellus on työn alla ja seuraavina kehitysvaiheina ovat käyttöliittymän ulkoasun parantaminen sekä käyttäjätilien ja kirjautumistoimintojen toteuttaminen.
+Projektin backend on toteutettu ASP.NET Corella ja tietokantana käytetään SQLitea. Lääkevalmisteiden tiedot haetaan Fimean Perusrekisteri XML -aineistosta.
 
-Projektin backend on toteutettu ASP.NET Corella ja tietokantana käytetään SQLitea. Lääkevalmisteiden perustiedot haetaan Fimean Perusrekisteri XML -aineistosta.
+Frontend on toteutettu React/Typescript-pohjaisena ja käyttöliittymäelementteihin ja tyyleihin on käytetty Material UI-kirjastoa. 
 
-Frontend on toteutettu React/Typescript-pohjaisena ja käyttöliittymäelementit ja tyylit toteutetaan Material UI-kirjaston avulla. 
-
-
-## Suunnitellut ominaisuudet
-
-Tavoitteena on toteuttaa ainakin seuraavat ominaisuudet:
-
-* Suomessa markkinoilla olevien lääkevalmisteiden hakeminen ja niiden tietojen näyttäminen
-* Hakutulosten suodattaminen
-* Hakutulosten sivutus (pagination)
-* Käyttäjän oman lääkelistan luominen
-* Lääkkeiden lisääminen käyttäjän lääkelistalle
-* Lääkelistan lääkkeiden muokkaaminen ja poistaminen
-* Käyttäjän lääkkeisiin liittyvien tietojen, kuten käyttötarkoituksen, annostuksen ja muistiinpanojen, tallentaminen
-* Myyntiluvallisten lääkevalmisteiden suodattaminen Fimean aineiston perusteella
-* Käyttäjien tunnistautuminen ja käyttäjäkohtaiset lääkelistat
-
-## Tähän mennessä toteutettu
-
-### Fimean rekisteri lääkevalmisteista
-
-Backend lukee Fimean Perusrekisteri XML -aineistoa `XmlSerializer`-kirjaston avulla.
-
-Fimean datasta käsitellään muun muassa:
-
-* lääkevalmisteen nimi
-* Fimean tunniste
-* ATC-koodi ja ATC-nimi
-* lääkemuoto
-* antoreitti
-* myyntiluvan haltija
-* myyntiluvan numero
-* myyntiluvan tila
-* tieto siitä, onko kyseessä ihmisille tarkoitettu lääke
-
-### Lääketietokanta
-
-Lääkevalmisteet tallennetaan SQLite-tietokantaan `Medicine`-entiteettinä, joka sisältää seuraavat tiedot lääkevalmisteesta:
-
-* `Id` - lääkevalmisteen yksilöivä tunniste
-* `FimeaId` - Fimean oma tunniste valmisteelle
-* `Name` - lääkevalmisteen nimi
-* `ActiveIngredient` - vaikuttava aine
-* `AtcCode` - ATC-koodi kansainvälisen ATC (Anatomical Therapeutic Chemical) -luokituksen mukaan
-* `AtcName` - ATC-luokan nimi
-* `DosageForm` - lääkemuoto
-* `RouteOfAdministration` - antoreitti
-* `MarketingAuthorisationHolder` - myyntiluvan haltija
-* `AuthorisationNumber` - myyntiluvan numero
-* `AuthorisationStatus` - myyntiluvan tila
-* `IsHumanMedicine` - onko kyseessä ihmisille tarkoitettu lääkevalmiste
-
-Lääkevalmisteiden tiedot luetaan Fimean datasta luokassa `FimeaImportService`.
-
-### REST API
-
-Lääkevalmisteille on toteutettu API, jonka avulla voidaan esimerkiksi:
-
-* hakea lääkkeitä nimen, vaikuttavan aineen tai id:n perusteella
-* luoda ja muokata lääkevalmisteita
-
-Esimerkiksi:
-
-```http
-GET /api/medicines/search?name=burana
-```
-
-palauttaa Burana-nimellä löytyvät lääkevalmisteet.
-
-### Paginointi
-
-Lääkevalmisteiden listaus- ja hakutoimintoihin on toteutettu sivutus.
-
-API palauttaa `PagedResult`-rakenteen, joka sisältää muun muassa:
-
-* hakutulokset
-* nykyisen sivun
-* sivun koon
-* tulosten kokonaismäärän
-
-Esimerkiksi:
-
-```text
-Page: 1
-PageSize: 20
-TotalCount: 125
-Items: 20
-```
-
-Tämä mahdollistaa nopeamman haun, kun kaikkia lääkevalmisteita ei tarvitse palauttaa yhdellä API-kutsulla.
-
-### Käyttäjän lääkelista
-
-Käyttäjän omia lääkkeitä varten on toteutettu `UserMedicine`-entiteetti.
-
-`UserMedicine` yhdistää käyttäjän ja lääkevalmisteen sekä sisältää käyttäjän kyseiseen lääkkeeseen liittyviä tietoja::
-
-* `UserId` - käyttäjän yksilöivä tunniste
-* `MedicineId` - lääkevalmisteen yksilövä tunniste
-* `Purpose` - lääkkeen käyttötarkoitus
-* `Dosage` - lääkkeen annostus
-* `Notes` - muita huomioita kyseiseen lääkitykseen liittyen
-
-`UserMedicine` liittyy `Medicine`-entiteettiin Entity Framework Coren avulla.
-
-Tietokannassa käyttäjän lääkkeet ovat omassa `UserMedicines`-taulussaan.
-
-### UserMedicine API
-
-Käyttäjän lääkelistan käsittelyyn on toteutettu:
-
-* `UserMedicineService`
-* `UserMedicinesController`
-* `CreateUserMedicineRequest`
-* `UpdateUserMedicineRequest`
-* `UserMedicineResponse`
-
-API tukee tällä hetkellä käyttäjän lääkkeiden:
-
-* listaamista
-* yksittäisen lääkkeen hakemista
-* lisäämistä
-* muokkaamista
-* poistamista
-
-### Entity Framework Core ja migraatiot
-
-Tietokannan hallintaan käytetään Entity Framework Corea ja EF Core -migraatioita.
+Sovellus on edelleen työn alla ja seuraavana kehitysvaiheena on käyttöliittymän ulkoasun ja käytettävyyden parantaminen.
 
 
-## Käyttöliittymän toiminnallisuus
+## Ominaisuudet
 
-Frontendissä käyttäjä on toistaiseksi kovakoodattu käyttäjäksi 1. Varsinaista kirjautumista ja käyttäjähallintaa ei ole vielä toteutettu, se tehdään myöhemmässä vaiheessa.
+* Käyttäjätilin luominen sekä sisään- ja uloskirjautuminen
+* Käyttäjäkohtainen lääkelista, joka näkyy vain kirjautuneelle käyttäjälle
+* Lääkkeiden hakeminen Fimean lääketiedoista
+* Lääkkeiden lisääminen omalle listalle
+* Omien lääkkeiden tietojen tarkastelu, muokkaaminen ja poistaminen
+* Lääkekohtaisten käyttötarkoitusten, annostusten ja lisätietojen tallentaminen
 
-Hakuun liittyvät toiminnot:
 
-* Lääkkeiden haku valmisteen nimen tai vaikuttavan aineen perusteella
-* Hakutulosten näyttäminen listana
-* Hakutulosten paginointi ja tieto hakutulosten kokonaismäärästä
-* Ilmoitus, jos haku ei tuota tuloksia
+## Tietoturva ja tietosuoja
 
-Lääkelistaan liittyvät toiminnot:
+### Käyttäjätiedot
 
-* Lääkkeen lisäys käyttäjän omalle lääkelistalle (valmiste, käyttötarkoitus, annostus, muistiinpanot)
-* Käyttäjän oman lääkelistan näyttäminen
-* Mahdollisuus tarkastella yksittäisen lääkkeen tietoja tarkemmin
-* Lääkelistalla olevan lääkkeen tietojen muokkaus
-* Lääkkeen poisto omalta listalta
+Käyttäjä kirjautuu sovellukseen itse valitsemallaan käyttäjätunnuksella ja salasanalla. Rekisteröitymisen yhteydessä käyttäjälle luodaan yksilöllinen tunniste (ID), jonka perusteella sovellus yhdistää käyttäjän hänen tallentamaansa lääkelistaan.
+
+Sovellus tallentaa käyttäjätilin tiedot (käyttäjätunnus ja ID) sekä käyttäjän henkilökohtaiselle lääkelistalle lisäämät tiedot, kuten lääkkeet, käyttötarkoitukset, annostukset ja mahdolliset lisätiedot. Käyttäjäkohtaiset lääkelistat tallennetaan tietokantaan.
+
+Sovellus ei edellytä käyttäjän oikean nimen tai muiden suoraan henkilöllisyyden paljastavien tietojen antamista. Käyttäjä vastaa kuitenkin itse siitä, millaisia tietoja hän kirjoittaa käyttäjätunnukseensa ja lääkelistan lisätietoihin.
+
+### Salasanojen käsittely
+
+Käyttäjätunnusten ja salasanojen hallintaan käytetään ASP.NET Core Identity -kirjastoa. Salasanoja ei tallenneta tietokantaan selväkielisinä. Identity tallentaa salasanat turvallisina tiivisteinä (password hashes), joiden avulla salasana voidaan tarkistaa kirjautumisen yhteydessä paljastamatta alkuperäistä salasanaa.
+
+Kirjautuneen käyttäjän tunnistamiseen käytetään autentikointievästettä. Backend tarkistaa kirjautumisen ja rajaa käyttäjän lääkelistan toiminnot kyseisen käyttäjän omiin tietoihin.
+
+### Käyttäjien tietojen erottaminen
+
+Backend tunnistaa käyttäjän kirjautumistiedon perusteella. Lääkelistan hakemisessa, lisäämisessä, muokkaamisessa ja poistamisessa käyttäjän tunniste otetaan palvelimen vahvistamasta kirjautumistilasta. Näin käyttäjä ei voi tavallisten API-pyyntöjen avulla valita toisen käyttäjän tunnistetta ja käsitellä tämän lääkelistaa.
 
 
 ## Teknologiat
@@ -161,8 +45,8 @@ Lääkelistaan liittyvät toiminnot:
 Backend:
 
 * C#
-* ASP.NET Core
-* .NET 10
+* ASP.NET Core Web API
+* ASP.NET Core Identity
 * Entity Framework Core
 * SQLite
 * REST API
@@ -177,62 +61,6 @@ Frontend:
 * Material UI
 
 
-## Projektin rakenne
-
-Projektin rakenne on tällä hetkellä pääpiirteissään:
-
-```text
-laakelista/
-├── backend/
-│   └── Laakelista.Api/
-│       ├── Controllers/
-│       │   ├── FimeaController.cs
-│       │   ├── MedicinesController.cs
-│       │   └── UserMedicinesController.cs
-│       ├── Data/
-│       │   └── LaakelistaDbContext.cs
-│       ├── DTOs/
-│       │   ├── CreateMedicineRequest.cs
-│       │   ├── CreateUserMedicineRequest.cs
-│       │   ├── MedicineResponse.cs
-│       │   ├── PagedResult.cs
-│       │   ├── UpdateMedicineRequest.cs
-│       │   ├── UpdateUserMedicineRequest.cs
-│       │   └── UserMedicineResponse.cs
-│       ├── Fimea/
-│       │   ├── FimeaModels.cs
-│       │   └── FimeaImportService.cs
-│       ├── Migrations/
-│       ├── Models/
-│       │   ├── Medicine.cs
-│       │   ├── User.cs
-│       │   └── UserMedicine.cs
-│       ├── Services/
-│       │   ├── MedicineService.cs
-│       │   └── UserMedicineService.cs
-│       └── laakelista.db
-│
-└── frontend/
-    ├── src/
-    │   ├── components/
-    │   │   ├── AddUserMedicineDialog.tsx
-    │   │   ├── AddUserMedicineForm.tsx
-    │   │   ├── DeleteMedicineDialog.tsx
-    │   │   ├── DuplicateMedicineDialog.tsx
-    │   │   ├── EditMedicineDialog.tsx
-    │   │   ├── EditUserMedicineForm.tsx
-    │   │   ├── MedicineCard.tsx
-    │   │   ├── SearchMedicine.tsx
-    │   │   ├── SearchResults.tsx
-    │   │   ├── UserMedicineCard.tsx
-    │   │   └── UserMedicineList.tsx    
-    │   ├── api.ts
-    │   ├── types.ts
-    │   ├── App.tsx
-    │   └── ...
-    └── ...
-```
-
 ## Fimea-aineiston tuonti
 
 Sovellus käyttää Fimean Perusrekisteri XML -aineistoa lääkkeiden perustietojen lähteenä.
@@ -241,12 +69,12 @@ XML-tiedosto sijoitetaan backend-projektissa hakemistoon:
 
 ``backend/Laakelista.Api/FimeaData/perusrekisteri.xml``
 
-Aineistoa ei ole kuitenkaan tallennettu GitHub-repositorioon, koska XML-tiedosto on suuri.
+Aineistoa ei ole kuitenkaan tallennettu GitHub-repositorioon, koska XML-tiedosto on hyvin suuri.
 
 Aineisto löytyy internetistä osoitteesta ``https://fimea.fi/laakehaut_ja_luettelot/perusrekisteri-xml``
 
 
-## Sovelluksen käynnistäminen
+## Sovelluksen käynnistäminen kehitysympäristössä
 
 ### Backend
 
@@ -258,7 +86,7 @@ Käynnistä sovellus:
 
 ``dotnet run``
 
-Backend käynnistyy paikallisesti ASP.NET Coren määrittämään osoitteeseen.
+Backend käynnistyy paikallisesti ASP.NET Coren määrittämään osoitteeseen, oletuksena ``http://localhost:5027``.
 
 ### Frontend
 
@@ -274,9 +102,7 @@ Käynnistä kehityspalvelin:
 
 ``npm run dev``
 
-Frontend käynnistyy Viten kehityspalvelimelle, oletuksena osoitteeseen:
-
-http://localhost:5173
+Frontend käynnistyy Viten kehityspalvelimelle, oletuksena osoitteeseen ``http://localhost:5173``.
 
 
 

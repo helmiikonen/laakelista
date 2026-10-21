@@ -4,7 +4,7 @@ public class UserMedicine
 {
     public int Id { get; set; }
 
-    public int UserId { get; set; }
+    public Guid UserId { get; set; }
 
     public int MedicineId { get; set; }
 
@@ -14,7 +14,7 @@ public class UserMedicine
 
     public string? Notes { get; set; }
 
-    public User User { get; set; } = null!;
-
     public Medicine Medicine { get; set; } = null!;
+
+    public ApplicationUser User { get; set; } = null!;
 }

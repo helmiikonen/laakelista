@@ -6,7 +6,7 @@ public class MedicineResponse
 
     public string Name { get; set; } = string.Empty;
 
-    public string ActiveIngredient { get; set; } = string.Empty;
+    public string? ActiveIngredient { get; set; } = string.Empty;
 
     public string? Strength { get; set; }
 

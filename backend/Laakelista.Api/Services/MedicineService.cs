@@ -45,41 +45,42 @@ public class MedicineService
         
     }
 
-  public async Task<PagedResult<MedicineResponse>> SearchAsync(
-    string name,
-    int page,
-    int pageSize)
-  {
-    var query = _context.Medicines
-        .Where(medicine =>
-            medicine.Name.ToLower().Contains(name.ToLower()) ||
-            medicine.ActiveIngredient.ToLower().Contains(name.ToLower()));
-
-    var totalCount = await query.CountAsync();
-
-    var medicines = await query
-        .OrderBy(medicine => medicine.Name)
-        .Skip((page - 1) * pageSize)
-        .Take(pageSize)
-        .ToListAsync();
-
-    var items = medicines.Select(medicine => new MedicineResponse
+    public async Task<PagedResult<MedicineResponse>> SearchAsync(
+        string searchTerm,
+        int page,
+        int pageSize)
     {
-        Id = medicine.Id,
-        Name = medicine.Name,
-        ActiveIngredient = medicine.ActiveIngredient,
-        Strength = medicine.Strength,
-        DosageForm = medicine.DosageForm
-    }).ToList();
+        var query = _context.Medicines
+            .Where(medicine =>
+                medicine.Name.ToLower().Contains(searchTerm) ||
+                (medicine.ActiveIngredient != null &&
+                medicine.ActiveIngredient.ToLower().Contains(searchTerm)));
 
-    return new PagedResult<MedicineResponse>
-    {
-        Items = items,
-        Page = page,
-        PageSize = pageSize,
-        TotalCount = totalCount
-    };
-  }
+        var totalCount = await query.CountAsync();
+
+        var medicines = await query
+            .OrderBy(medicine => medicine.Name)
+            .Skip((page - 1) * pageSize)
+            .Take(pageSize)
+            .ToListAsync();
+
+        var items = medicines.Select(medicine => new MedicineResponse
+        {
+            Id = medicine.Id,
+            Name = medicine.Name,
+            ActiveIngredient = medicine.ActiveIngredient,
+            Strength = medicine.Strength,
+            DosageForm = medicine.DosageForm
+        }).ToList();
+
+        return new PagedResult<MedicineResponse>
+        {
+            Items = items,
+            Page = page,
+            PageSize = pageSize,
+            TotalCount = totalCount
+        };
+    }
 
     public async Task<MedicineResponse?> GetByIdAsync(int id)
     {

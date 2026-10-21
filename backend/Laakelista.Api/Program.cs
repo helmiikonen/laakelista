@@ -1,11 +1,15 @@
 using Laakelista.Api.Data;
 using Laakelista.Api.Services;
 using Laakelista.Api.Fimea;
+using Laakelista.Api.Models;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllers();
+
+builder.Services.AddOpenApi();
 
 builder.Services.AddCors(options =>
 {
@@ -14,7 +18,8 @@ builder.Services.AddCors(options =>
         policy
             .WithOrigins("http://localhost:5173")
             .AllowAnyHeader()
-            .AllowAnyMethod();
+            .AllowAnyMethod()
+            .AllowCredentials();
     });
 });
 
@@ -22,10 +27,14 @@ builder.Services.AddDbContext<LaakelistaDbContext>(options =>
     options.UseSqlite(
         builder.Configuration.GetConnectionString("DefaultConnection")));
 
+builder.Services.AddIdentityApiEndpoints<ApplicationUser>()
+    .AddEntityFrameworkStores<LaakelistaDbContext>();
+
+builder.Services.AddAuthorization();
+
 builder.Services.AddScoped<MedicineService>();
 builder.Services.AddScoped<UserMedicineService>();
 builder.Services.AddScoped<FimeaImportService>();
-builder.Services.AddScoped<UserService>();
 
 var app = builder.Build();
 
@@ -37,6 +46,9 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+
+app.UseAuthentication();
+app.UseAuthorization();
 
 app.MapControllers();
 

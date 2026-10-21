@@ -1,24 +1,28 @@
-using System.Dynamic;
-using System.Reflection.Metadata;
 using Laakelista.Api.Models;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
 namespace Laakelista.Api.Data;
 
-public class LaakelistaDbContext : DbContext
+public class LaakelistaDbContext
+    : IdentityDbContext<ApplicationUser, IdentityRole<Guid>, Guid>
 {
-    public LaakelistaDbContext(DbContextOptions<LaakelistaDbContext> options)
+    public LaakelistaDbContext(
+        DbContextOptions<LaakelistaDbContext> options)
         : base(options)
     {
     }
 
     public DbSet<Medicine> Medicines => Set<Medicine>();
-    public DbSet<UserMedicine> UserMedicines => Set<UserMedicine>();
-    public DbSet<User> Users => Set<User>();
 
-    // Määritellään tietokantataulujen välinen suhde
-    protected override void OnModelCreating(ModelBuilder modelBuilder)
+    public DbSet<UserMedicine> UserMedicines => Set<UserMedicine>();
+
+    protected override void OnModelCreating(
+        ModelBuilder modelBuilder)
     {
+        base.OnModelCreating(modelBuilder);
+
         modelBuilder.Entity<UserMedicine>()
             .HasOne(userMedicine => userMedicine.Medicine)
             .WithMany(medicine => medicine.UserMedicines)

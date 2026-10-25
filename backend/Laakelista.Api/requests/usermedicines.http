@@ -11,3 +11,6 @@ Content-Type: application/json
 
 ### Hae kirjautuneen käyttäjän lääkityslista
 GET http://localhost:5027/api/UserMedicines
+
+### Hae kaikkien käyttäjien tallennetut lääkkeet
+GET http://localhost:5027/api/UserMedicines/all

@@ -4,12 +4,15 @@ import {
   Alert,
   Box,
   Button,
+  InputAdornment,
+  IconButton,
   Paper,
   Tab,
   Tabs,
   TextField,
   Typography,
 } from "@mui/material"
+import { Visibility, VisibilityOff } from "@mui/icons-material";
 import { login, register } from "../api"
 
 type AuthFormProps = {
@@ -20,8 +23,11 @@ export default function AuthForm({ onLogin }: AuthFormProps) {
   const [mode, setMode] = useState<"login" | "register">("login")
   const [username, setUsername] = useState("")
   const [password, setPassword] = useState("")
+  const [confirmPassword, setConfirmPassword] = useState("")
   const [error, setError] = useState("")
   const [loading, setLoading] = useState(false)
+  const [showPassword, setShowPassword] = useState(false)
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false)
 
   async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault()
@@ -30,17 +36,22 @@ export default function AuthForm({ onLogin }: AuthFormProps) {
 
     try {
       if (mode === "register") {
+        if (password !== confirmPassword) {
+          setError("Salasanat eivät täsmää.");
+          return;
+        }
         await register(username, password)
       }
 
       await login(username, password)
       await onLogin()
-    } catch {
-      setError(
-        mode === "register"
-          ? "Rekisteröityminen tai kirjautuminen epäonnistui. Tarkista tiedot ja salasanan vaatimukset."
-          : "Kirjautuminen epäonnistui. Tarkista käyttäjätunnus ja salasana."
-      )
+    } catch (error) {
+      if (error instanceof Error) {
+        setError(error.message)
+        console.log(error.message)
+      } else {
+        setError("Tapahtui odottamaton virhe. Yritä uudelleen.")
+      }
     } finally {
       setLoading(false)
     }
@@ -72,6 +83,11 @@ export default function AuthForm({ onLogin }: AuthFormProps) {
           onChange={(_, value: "login" | "register") => {
             setMode(value)
             setError("")
+            setUsername("")
+            setPassword("")
+            setConfirmPassword("")
+            setShowPassword(false)
+            setShowConfirmPassword(false)
           }}
           variant="fullWidth"
           sx={{ mb: 3 }}
@@ -97,19 +113,70 @@ export default function AuthForm({ onLogin }: AuthFormProps) {
             margin="normal"
           />
 
+          {mode === "register" && 
+          <Typography
+            variant="caption"
+            color="text.secondary"
+            sx={{ display: "block" }}
+          >
+            Käyttäjätunnuksessa tulee olla 3–20 merkkiä. Sallittuja merkkejä ovat pienet ja isot kirjaimet (poislukien ääkköset å, ä, ö) sekä numerot.
+          </Typography>}
+          
           <TextField
             label="Salasana"
-            type="password"
+            type={showPassword ? "text" : "password"}
             value={password}
             onChange={(event) => setPassword(event.target.value)}
-            autoComplete={
-              mode === "login" ? "current-password" : "new-password"
-            }
             required
             fullWidth
             margin="normal"
+            slotProps={{
+              input: {
+                endAdornment: 
+                  <InputAdornment position="end">
+                    <IconButton
+                      onClick={() => setShowPassword(!showPassword)}
+                      edge="end"
+                    >
+                      {showPassword ? <Visibility /> : <VisibilityOff />}
+                    </IconButton>
+                  </InputAdornment>
+              },
+            }}
           />
-
+          {mode === "register" && 
+          <div>
+            <Typography
+              variant="caption"
+              color="text.secondary"
+              sx={{display:"block", marginBottom:2}}
+            >
+              Salasanassa tulee olla vähintään 8 merkkiä, iso ja pieni kirjain (ei ääkkösiä å, ä, ö),
+              numero sekä erikoismerkki.
+            </Typography>
+            <TextField
+              label="Vahvista salasana"
+              type={showConfirmPassword ? "text" : "password"}
+              name="confirmPassword"
+              value={confirmPassword}
+              onChange={(event) => setConfirmPassword(event.target.value)}
+              required
+              fullWidth
+              slotProps={{
+                input: {
+                  endAdornment: 
+                    <InputAdornment position="end">
+                      <IconButton
+                        onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                        edge="end"
+                      >
+                        {showConfirmPassword ? <Visibility /> : <VisibilityOff />}
+                      </IconButton>
+                    </InputAdornment>
+                },
+              }}
+            />
+          </div>}
           <Button
             type="submit"
             variant="contained"

@@ -1,9 +1,11 @@
 using Laakelista.Api.DTOs;
 using Laakelista.Api.Services;
+using Laakelista.Api.Models;
+using Laakelista.Api.Data;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
-using Laakelista.Api.Models;
+using Microsoft.EntityFrameworkCore;
 
 namespace Laakelista.Api.Controllers;
 
@@ -14,13 +16,19 @@ public class UserMedicinesController : ControllerBase
 {
     private readonly UserMedicineService _userMedicineService;
     private readonly UserManager<ApplicationUser> _userManager;
+    private readonly LaakelistaDbContext _context;
+    private readonly IWebHostEnvironment _environment;
 
     public UserMedicinesController(
         UserMedicineService userMedicineService,
-        UserManager<ApplicationUser> userManager)
+        UserManager<ApplicationUser> userManager,
+        LaakelistaDbContext context,
+        IWebHostEnvironment environment)
     {
         _userMedicineService = userMedicineService;
         _userManager = userManager;
+        _context = context;
+        _environment = environment;
     }
 
     [HttpGet]
@@ -56,6 +64,32 @@ public class UserMedicinesController : ControllerBase
         }
 
         return Ok(userMedicine);
+    }
+
+    // vain kehityskäyttö; hae kaikkien käyttäjien tallennetut lääkkeet
+    [AllowAnonymous]
+    [HttpGet("all")]
+    public async Task<IActionResult> GetAllUserMedicines()
+    {
+        if (!_environment.IsDevelopment())
+        {
+            return NotFound();
+        }
+
+        var medicines = await _context.UserMedicines
+            .Select(userMedicine => new
+            {
+                userMedicine.Id,
+                userMedicine.UserId,
+                userMedicine.MedicineId,
+                MedicineName = userMedicine.Medicine.Name,
+                userMedicine.Purpose,
+                userMedicine.Dosage,
+                userMedicine.Notes
+            })
+            .ToListAsync();
+
+        return Ok(medicines);
     }
 
     [HttpPost]

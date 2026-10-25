@@ -28,13 +28,25 @@ builder.Services.AddDbContext<LaakelistaDbContext>(options =>
         builder.Configuration.GetConnectionString("DefaultConnection")));
 
 builder.Services.AddIdentityApiEndpoints<ApplicationUser>()
-    .AddEntityFrameworkStores<LaakelistaDbContext>();
+    .AddEntityFrameworkStores<LaakelistaDbContext>()
+    .AddErrorDescriber<FinnishIdentityErrorDescriber>();
 
 builder.Services.AddAuthorization();
 
 builder.Services.AddScoped<MedicineService>();
 builder.Services.AddScoped<UserMedicineService>();
 builder.Services.AddScoped<FimeaImportService>();
+
+builder.Services.Configure<IdentityOptions>(options =>
+{
+    options.User.AllowedUserNameCharacters =
+        "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+    options.Password.RequiredLength = 8;
+    options.Password.RequireDigit = true;
+    options.Password.RequireLowercase = true;
+    options.Password.RequireUppercase = true;
+    options.Password.RequireNonAlphanumeric = true;
+});
 
 var app = builder.Build();
 

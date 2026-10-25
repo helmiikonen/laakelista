@@ -7,7 +7,8 @@ import {
   updateUserMedicine,
   deleteUserMedicine,
   getCurrentUser, 
-  logout
+  logout,
+  deleteAccount
 } from "./api"
 import { Box, Button } from "@mui/material"
 import type { Medicine, UserMedicine } from "./types"
@@ -16,9 +17,10 @@ import UserMedicineList from "./components/UserMedicineList"
 import DuplicateMedicineDialog from "./components/DuplicateMedicineDialog"
 import DeleteMedicineDialog from "./components/DeleteMedicineDialog"
 import AddMedicineDialog from "./components/AddMedicineDialog"
-import EditMedicineDialog from "./components/EditMedicineDialog";
+import EditMedicineDialog from "./components/EditMedicineDialog"
 import SearchResults from "./components/SearchResults"
 import AuthForm from "./components/AuthForm"
+import UserSettings from "./components/UserSettings"
 
 function App() {
   const [search, setSearch] = useState("")
@@ -26,8 +28,8 @@ function App() {
   const [searching, setSearching] = useState(false)
   const [medicines, setMedicines] = useState<Medicine[]>([])
   const [error, setError] = useState("")
-  const [page, setPage] = useState(1);
-  const [totalCount, setTotalCount] = useState(0);
+  const [page, setPage] = useState(1)
+  const [totalCount, setTotalCount] = useState(0)
   const [loadingUserMedicines, setLoadingUserMedicines] = useState(true)
   const [userMedicines, setUserMedicines] = useState<UserMedicine[]>([])
   const [selectedMedicine, setSelectedMedicine] = useState<Medicine | null>(null)
@@ -39,6 +41,7 @@ function App() {
     userName: string
   } | null>(null)
   const [checkingAuth, setCheckingAuth] = useState(true)
+  const [openSettings, setOpenSettings] = useState(false)
 
   const pageSize = 10
 
@@ -66,6 +69,7 @@ function App() {
   async function handleLogin() {
     const user = await getCurrentUser()
     setCurrentUser(user)
+    setOpenSettings(false)
   }
 
   async function handleLogout() {
@@ -175,6 +179,10 @@ function App() {
     handleSearch(previousPage)
   }
 
+  const viewSettings = () => {
+    setOpenSettings(!openSettings)
+  }
+
   const handleClickDelete = (userMedicine: UserMedicine) => {
     setDeletingUserMedicine(userMedicine)
   }
@@ -184,6 +192,17 @@ function App() {
       handleDelete(deletingUserMedicine)
       setDeletingUserMedicine(null)
     }
+  }
+
+  const deleteAll = (userMedicines: UserMedicine[]) => {
+    userMedicines.forEach(medicine => {
+      handleDelete(medicine)
+    })
+  }
+
+  const handleDeleteAccount = async (password: string) => {
+    await deleteAccount(password)
+    setCurrentUser(null)
   }
 
   async function handleDelete(userMedicine: UserMedicine) {
@@ -265,67 +284,83 @@ function App() {
           mb: 3,
         }}
       >
-        <h1 id="header">Lääkelista</h1>
+        <h2 id="header">Tervetuloa, {currentUser?.userName}!</h2>
 
         <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
-          <span>Kirjautunut: {currentUser?.userName}</span>
-
+          <Button variant="text" onClick={viewSettings}>
+            {openSettings ? <>Etusivulle</> : <>Tilin asetukset</>}
+          </Button>
           <Button variant="outlined" onClick={handleLogout}>
             Kirjaudu ulos
           </Button>
         </Box>
       </Box>
+
+      {openSettings ? 
+        <UserSettings 
+          currentUser={currentUser}
+          setCurrentUser={setCurrentUser}
+          userMedicines={userMedicines}
+          onDeleteMedicines={deleteAll}
+          onDeleteAccount={handleDeleteAccount}
+        /> 
+      :
+
+      <>
+        <UserMedicineList
+          userMedicines={userMedicines}
+          loading={loadingUserMedicines}
+          onEdit={handleEdit}
+          onDelete={handleClickDelete}
+        />
+
+        <SearchMedicine
+          search={search}
+          onSearchChange={setSearch}
+          onSearch={handleNewSearch}
+          onReset={handleReset}
+        />
+
+        <AddMedicineDialog
+          medicine={selectedMedicine}
+          onAdd={handleAdd}
+          onClose={() => setSelectedMedicine(null)}
+        />
+
+        <EditMedicineDialog 
+          editingUserMedicine={editingUserMedicine}
+          onClose={() => setEditingUserMedicine(null)}
+          onSave={handleEditSave}        
+        />
+
+        <DuplicateMedicineDialog
+          medicine={duplicateMedicine}
+          onClose={() => setDuplicateMedicine(null)}
+          onEdit={handleDuplicateEdit}
+        />
+
+        <DeleteMedicineDialog
+          open={deletingUserMedicine !== null}
+          onClose={() => setDeletingUserMedicine(null)}
+          onConfirm={confirmDelete}
+        />
+
+        <SearchResults 
+          searching={searching}
+          medicines={medicines}
+          searchedTerm={searchedTerm}
+          totalCount={totalCount}
+          pageSize={pageSize}
+          page={page}
+          error={error}
+          handleNextPageClick={handleNextPageClick}
+          handlePreviousPageClick={handlePreviousPageClick}
+          handleAddClick={handleAddClick}
+        />
+      </>
+      }
       
-      <UserMedicineList
-        userMedicines={userMedicines}
-        loading={loadingUserMedicines}
-        onEdit={handleEdit}
-        onDelete={handleClickDelete}
-      />
-
-      <SearchMedicine
-        search={search}
-        onSearchChange={setSearch}
-        onSearch={handleNewSearch}
-        onReset={handleReset}
-      />
-
-      <AddMedicineDialog
-        medicine={selectedMedicine}
-        onAdd={handleAdd}
-        onClose={() => setSelectedMedicine(null)}
-      />
-
-      <EditMedicineDialog 
-        editingUserMedicine={editingUserMedicine}
-        onClose={() => setEditingUserMedicine(null)}
-        onSave={handleEditSave}        
-      />
-
-      <DuplicateMedicineDialog
-        medicine={duplicateMedicine}
-        onClose={() => setDuplicateMedicine(null)}
-        onEdit={handleDuplicateEdit}
-      />
-
-      <DeleteMedicineDialog
-        open={deletingUserMedicine !== null}
-        onClose={() => setDeletingUserMedicine(null)}
-        onConfirm={confirmDelete}
-      />
-
-      <SearchResults 
-        searching={searching}
-        medicines={medicines}
-        searchedTerm={searchedTerm}
-        totalCount={totalCount}
-        pageSize={pageSize}
-        page={page}
-        error={error}
-        handleNextPageClick={handleNextPageClick}
-        handlePreviousPageClick={handlePreviousPageClick}
-        handleAddClick={handleAddClick}
-      />
+      
     </Box>
     </div>
   )

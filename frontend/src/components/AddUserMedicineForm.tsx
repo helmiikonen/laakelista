@@ -1,10 +1,11 @@
 import { useState } from "react"
 import type { Medicine } from "../types"
-
-import Box from "@mui/material/Box"
-import Button from "@mui/material/Button"
-import TextField from "@mui/material/TextField"
-import Typography from "@mui/material/Typography"
+import {
+  Box,
+  Button,
+  TextField,
+  Typography
+} from "@mui/material"
 
 type AddUserMedicineFormProps = {
   medicine: Medicine

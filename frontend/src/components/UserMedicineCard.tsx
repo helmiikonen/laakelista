@@ -1,11 +1,12 @@
 import type { UserMedicine } from "../types"
-
-import Card from "@mui/material/Card"
-import CardContent from "@mui/material/CardContent"
-import CardActions from "@mui/material/CardActions"
-import Typography from "@mui/material/Typography"
-import Button from "@mui/material/Button"
-import Box from "@mui/material/Box"
+import {
+  Card,
+  CardContent,
+  CardActions,
+  Typography,
+  Button,
+  Box
+} from "@mui/material"
 
 type UserMedicineCardProps = {
   userMedicine: UserMedicine

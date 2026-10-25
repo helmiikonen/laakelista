@@ -58,7 +58,7 @@ function UserMedicineList({
     : 
       
       userMedicines.length === 0 ? (
-        <Typography>
+        <Typography sx={{margin:2}}>
           Lääkelistasi on tyhjä.
         </Typography>
       ) : (
@@ -76,14 +76,14 @@ function UserMedicineList({
                 sx={{display: "flex", justifyContent: "left"}}
                 spacing={2}
               >
-                <Grid size={10}>
+                <Grid size={9}>
                   <Typography className="user-medicine-list" sx={{marginLeft: 2, marginBottom: 1}}>
                     <strong>{userMedicine.medicineName}</strong> {userMedicine.medicineStrength}
                   </Typography>
                   <Divider />
                 </Grid>
 
-                <Grid size={2} sx={{display: "flex", justifyContent: "right"}}>
+                <Grid size={3} sx={{display: "flex", justifyContent: "right"}}>
                   <Button
                     variant="text"
                     sx={{textTransform: "none"}}

@@ -7,7 +7,6 @@ Content-Type: application/json
   "password": "TestiSalasana123!"
 }
 
-
 ### Rekisteröi uusi käyttäjä
 POST http://localhost:5027/api/Auth/register
 Content-Type: application/json
@@ -17,22 +16,34 @@ Content-Type: application/json
   "password": "Kaurapuuro567#"
 }
 
-
-
 ### Kirjaudu sisään
 POST http://localhost:5027/api/Auth/login
 Content-Type: application/json
 
 {
-  "username": "testikettu42",
-  "password": "TestiSalasana123!"
+  "username": "testikana15",
+  "password": "Kaurapuuro567#"
 }
-
 
 ### Hae kirjautuneen käyttäjän tiedot
 GET http://localhost:5027/api/Auth/me
 
-
-
 ### Kirjaudu ulos
 POST http://localhost:5027/api/Auth/logout
+
+### Näytä kaikki käyttäjät
+GET http://localhost:5027/api/Auth/users
+
+### Poista käyttäjä
+DELETE http://localhost:5027/api/Auth/users/448379fc-6f3e-4f31-96e9-a96d9fde91ce
+
+### Poista kirjautuneen käyttäjän käyttäjätili
+DELETE http://localhost:5027/api/Auth/account
+
+### Vaihda käyttäjätunnus
+PUT http://localhost:5027/api/Auth/username
+Content-Type: application/json
+
+{
+  "newUsername": "testikana16"
+}

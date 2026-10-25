@@ -1,23 +1,25 @@
 # Lääkelista-sovellus
 
-Kyseessä on web-sovellus, jonka tarkoituksena on mahdollistaa käyttäjälle oman lääkityslistan ylläpitäminen. Sovelluksessa kirjautunut käyttäjä voi lisätä lääkelistalleen käyttämänsä lääkkeet, niiden annostukset ja käyttötarkoitukset.
+Kyseessä on web-sovellus, jonka tarkoituksena on mahdollistaa käyttäjälle oman lääkityslistan ylläpitäminen. Sovelluksessa kirjautunut käyttäjä voi lisätä lääkelistalleen käyttämänsä lääkkeet, niiden annostukset ja käyttötarkoitukset, sekä muokata tilinsä asetuksia kuten käyttäjänimeä ja salasanaa, ja poistaa tallennetut lääkkeensä sekä käyttäjätilinsä.
 
 Projektin backend on toteutettu ASP.NET Corella ja tietokantana käytetään SQLitea. Lääkevalmisteiden tiedot haetaan Fimean Perusrekisteri XML -aineistosta.
 
 Frontend on toteutettu React/Typescript-pohjaisena ja käyttöliittymäelementteihin ja tyyleihin on käytetty Material UI-kirjastoa. 
 
-Sovellus on edelleen työn alla ja seuraavana kehitysvaiheena on käyttöliittymän ulkoasun ja käytettävyyden parantaminen.
+Sovellus on edelleen työn alla ja seuraavana kehitysvaiheena on käyttöliittymän ulkoasun ja käytettävyyden parantaminen. Myöhemmin on tarkoituksena siirtää sovellus palvelimelle ja julkaista verkossa.
 
 
 ## Ominaisuudet
 
 * Käyttäjätilin luominen sekä sisään- ja uloskirjautuminen
 * Käyttäjäkohtainen lääkelista, joka näkyy vain kirjautuneelle käyttäjälle
-* Lääkkeiden hakeminen Fimean lääketiedoista
+* Lääkkeiden hakeminen Fimean lääketiedoista lääkkeen kauppanimen tai (englanninkielisen) vaikuttavan aineen perusteella
 * Lääkkeiden lisääminen omalle listalle
 * Omien lääkkeiden tietojen tarkastelu, muokkaaminen ja poistaminen
 * Lääkekohtaisten käyttötarkoitusten, annostusten ja lisätietojen tallentaminen
-
+* Käyttäjätunnuksen ja salasanan vaihtaminen
+* Lääkelistan tyhjennys
+* Käyttäjätilin poisto
 
 ## Tietoturva ja tietosuoja
 
@@ -28,6 +30,8 @@ Käyttäjä kirjautuu sovellukseen itse valitsemallaan käyttäjätunnuksella ja
 Sovellus tallentaa käyttäjätilin tiedot (käyttäjätunnus ja ID) sekä käyttäjän henkilökohtaiselle lääkelistalle lisäämät tiedot, kuten lääkkeet, käyttötarkoitukset, annostukset ja mahdolliset lisätiedot. Käyttäjäkohtaiset lääkelistat tallennetaan tietokantaan.
 
 Sovellus ei edellytä käyttäjän oikean nimen tai muiden suoraan henkilöllisyyden paljastavien tietojen antamista. Käyttäjä vastaa kuitenkin itse siitä, millaisia tietoja hän kirjoittaa käyttäjätunnukseensa ja lääkelistan lisätietoihin.
+
+Kirjautuneella käyttäjällä on mahdollisuus poistaa käyttäjätilinsä, jolloin myös hänen tallentamansa lääkitystiedot poistuvat tietokannasta. Käyttäjätilin poisto edellyttää salasanan syöttämistä.
 
 ### Salasanojen käsittely
 

@@ -12,6 +12,7 @@ type AddMedicineDialogProps = {
   onAdd: (
     purpose: string,
     dosage: string,
+    regularMedicine: boolean,
     notes: string
   ) => void
   onClose: () => void

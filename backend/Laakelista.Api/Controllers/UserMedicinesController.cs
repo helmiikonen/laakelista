@@ -85,6 +85,7 @@ public class UserMedicinesController : ControllerBase
                 MedicineName = userMedicine.Medicine.Name,
                 userMedicine.Purpose,
                 userMedicine.Dosage,
+                userMedicine.RegularMedicine,
                 userMedicine.Notes
             })
             .ToListAsync();

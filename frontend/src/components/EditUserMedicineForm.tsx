@@ -3,13 +3,21 @@ import type { UserMedicine } from "../types"
 import {
   Box,
   Button,
+  FormControl,
+  FormControlLabel,
+  RadioGroup,
+  Radio,
   TextField,
   Typography
 } from "@mui/material"
 
 type EditUserMedicineFormProps = {
   userMedicine: UserMedicine
-  onSave: (purpose: string, dosage: string, notes: string) => void
+  onSave: (
+    purpose: string, 
+    dosage: string, 
+    regularMedicine: boolean,
+    notes: string) => void
   onCancel: () => void
 }
 
@@ -20,11 +28,12 @@ function EditUserMedicineForm({
 }: EditUserMedicineFormProps) {
   const [purpose, setPurpose] = useState(userMedicine.purpose)
   const [dosage, setDosage] = useState(userMedicine.dosage)
+  const [regularMedicine, setRegularMedicine] = useState(userMedicine.regularMedicine)
   const [notes, setNotes] = useState(userMedicine.notes ?? "")
 
   function handleSubmit(event: React.FormEvent) {
     event.preventDefault()
-    onSave(purpose, dosage, notes)
+    onSave(purpose, dosage, regularMedicine, notes)
   }
 
   return (
@@ -71,6 +80,26 @@ function EditUserMedicineForm({
         required
         fullWidth
       />
+
+      <FormControl>
+        <RadioGroup
+          value={String(regularMedicine)}
+          onChange={(event) => {
+            setRegularMedicine(event.target.value === "true");
+          }}
+        >
+          <FormControlLabel
+            value="true"
+            control={<Radio />}
+            label="Säännöllinen lääke"
+          />
+          <FormControlLabel
+            value="false"
+            control={<Radio />}
+            label="Tarvittaessa otettava"
+          />
+        </RadioGroup>
+      </FormControl>
 
       <TextField
         label="Lisätiedot"

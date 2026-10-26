@@ -12,6 +12,8 @@ public class UserMedicine
 
     public string Dosage { get; set; } = string.Empty;
 
+    public bool RegularMedicine { get; set; } = true;
+
     public string? Notes { get; set; }
 
     public Medicine Medicine { get; set; } = null!;

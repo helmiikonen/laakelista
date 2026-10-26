@@ -20,5 +20,7 @@ public class UserMedicineResponse
 
     public string Dosage { get; set; } = string.Empty;
 
+    public bool RegularMedicine { get; set; } = true;
+
     public string? Notes { get; set; }
 }

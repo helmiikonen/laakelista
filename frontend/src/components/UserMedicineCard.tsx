@@ -7,6 +7,7 @@ import {
   Button,
   Box
 } from "@mui/material"
+import { Medication, Schedule } from "@mui/icons-material"
 
 type UserMedicineCardProps = {
   userMedicine: UserMedicine
@@ -63,8 +64,29 @@ function UserMedicineCard({
             {userMedicine.dosage}
           </Typography>
 
+          
+          <Box sx={{marginTop: 2, display:"flex", flexDirection:"row", justifyContent:"center"}}>
+            {userMedicine.regularMedicine ? 
+            <>
+              <Schedule/>
+              <Typography 
+                variant="body2" 
+                sx={{marginLeft: 1}}>
+                  Säännöllinen lääke
+              </Typography>
+            </> :
+            <>
+              <Medication/>
+              <Typography 
+                variant="body2"
+                sx={{marginLeft: 1}}>
+                  Tarvittaessa otettava
+              </Typography>
+            </>}
+          </Box>
+          
           {userMedicine.notes && (
-            <Typography variant="body2">
+            <Typography variant="body2" sx={{marginTop: 2}}>
               <strong>Lisätiedot:</strong>{" "}
               {userMedicine.notes}
             </Typography>

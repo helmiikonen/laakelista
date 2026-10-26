@@ -13,6 +13,7 @@ type EditMedicineDialogProps = {
   onSave: (
     purpose: string, 
     dosage: string, 
+    regularMedicine: boolean,
     notes: string
   ) => void
 }

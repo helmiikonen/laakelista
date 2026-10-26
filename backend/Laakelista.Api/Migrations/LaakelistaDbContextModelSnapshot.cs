@@ -151,6 +151,11 @@ namespace Laakelista.Api.Migrations
                         .IsRequired()
                         .HasColumnType("TEXT");
 
+                    b.Property<bool>("RegularMedicine")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER")
+                        .HasDefaultValue(true);
+
                     b.Property<Guid>("UserId")
                         .HasColumnType("TEXT");
 

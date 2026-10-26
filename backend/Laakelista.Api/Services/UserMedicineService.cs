@@ -32,6 +32,7 @@ public class UserMedicineService
             ActiveIngredient = userMedicine.Medicine.ActiveIngredient,
             Purpose = userMedicine.Purpose,
             Dosage = userMedicine.Dosage,
+            RegularMedicine = userMedicine.RegularMedicine,
             Notes = userMedicine.Notes
         }).ToList();
     }
@@ -62,6 +63,7 @@ public class UserMedicineService
             ActiveIngredient = userMedicine.Medicine.ActiveIngredient,
             Purpose = userMedicine.Purpose,
             Dosage = userMedicine.Dosage,
+            RegularMedicine = userMedicine.RegularMedicine,
             Notes = userMedicine.Notes
         };
     }
@@ -97,6 +99,7 @@ public class UserMedicineService
             MedicineId = request.MedicineId,
             Purpose = request.Purpose,
             Dosage = request.Dosage,
+            RegularMedicine = request.RegularMedicine,
             Notes = request.Notes
         };
 
@@ -117,6 +120,7 @@ public class UserMedicineService
                 MedicineDosageForm = medicine.DosageForm,
                 Purpose = userMedicine.Purpose,
                 Dosage = userMedicine.Dosage,
+                RegularMedicine = userMedicine.RegularMedicine,
                 Notes = userMedicine.Notes
             },
             AlreadyExists = false
@@ -149,6 +153,7 @@ public class UserMedicineService
         userMedicine.MedicineId = request.MedicineId;
         userMedicine.Purpose = request.Purpose;
         userMedicine.Dosage = request.Dosage;
+        userMedicine.RegularMedicine = request.RegularMedicine;
         userMedicine.Notes = request.Notes;
 
         await _context.SaveChangesAsync();

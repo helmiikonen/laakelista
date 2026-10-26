@@ -73,7 +73,6 @@ export async function register(username: string, password: string) {
     );
   }
 
-
   return response.json()
 }
 
@@ -111,7 +110,6 @@ export async function login(
 
     throw new Error("Kirjautuminen epäonnistui.");
   }
-
 
   return response.json()
 

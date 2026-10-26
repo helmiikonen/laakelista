@@ -85,6 +85,7 @@ function App() {
   async function handleAdd(
     purpose: string,
     dosage: string,
+    regularMedicine: boolean,
     notes: string
   ) {
     if (!selectedMedicine) return
@@ -94,6 +95,7 @@ function App() {
         medicineId: selectedMedicine.id,
         purpose,
         dosage,
+        regularMedicine,
         notes: notes || null,
       })
       setSelectedMedicine(null)
@@ -181,6 +183,7 @@ function App() {
 
   const viewSettings = () => {
     setOpenSettings(!openSettings)
+    setError("")
   }
 
   const handleClickDelete = (userMedicine: UserMedicine) => {
@@ -235,6 +238,7 @@ function App() {
   async function handleEditSave(
     purpose: string,
     dosage: string,
+    regularMedicine: boolean,
     notes: string
   ) {
     if (!editingUserMedicine) {
@@ -248,6 +252,7 @@ function App() {
           medicineId: editingUserMedicine.medicineId,
           purpose,
           dosage,
+          regularMedicine,
           notes: notes || null,
         }
       )

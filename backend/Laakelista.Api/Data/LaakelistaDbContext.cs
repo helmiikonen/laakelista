@@ -34,5 +34,9 @@ public class LaakelistaDbContext
             .WithMany(user => user.UserMedicines)
             .HasForeignKey(userMedicine => userMedicine.UserId)
             .OnDelete(DeleteBehavior.Cascade);
+        
+        modelBuilder.Entity<UserMedicine>()
+            .Property(m => m.RegularMedicine)
+            .HasDefaultValue(true);
     }
 }

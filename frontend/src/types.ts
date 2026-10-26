@@ -24,6 +24,7 @@ export type UserMedicine = {
   medicineDosageForm: string
   purpose: string
   dosage: string
+  regularMedicine: boolean
   notes: string | null
 }
 
@@ -31,6 +32,7 @@ export type CreateUserMedicineRequest = {
   medicineId: number
   purpose: string
   dosage: string
+  regularMedicine: boolean
   notes: string | null
 }
 
@@ -38,5 +40,6 @@ export type UpdateUserMedicineRequest = {
   medicineId: number
   purpose: string
   dosage: string
+  regularMedicine: boolean
   notes: string | null
 }

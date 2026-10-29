@@ -110,6 +110,12 @@ namespace Laakelista.Api.Migrations
                         .IsRequired()
                         .HasColumnType("TEXT");
 
+                    b.Property<bool>("HasOverTheCounterPackages")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<bool>("HasPrescriptionPackages")
+                        .HasColumnType("INTEGER");
+
                     b.Property<bool>("IsHumanMedicine")
                         .HasColumnType("INTEGER");
 
@@ -145,6 +151,9 @@ namespace Laakelista.Api.Migrations
                         .HasColumnType("INTEGER");
 
                     b.Property<string>("Notes")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("PrescriptionStatus")
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Purpose")

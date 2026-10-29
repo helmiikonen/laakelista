@@ -5,6 +5,10 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Laakelista.Api.Services;
 
+public class PrescriptionStatusException : Exception
+{
+    public PrescriptionStatusException(string message) : base(message) {}
+}
 public class UserMedicineService
 {
     private readonly LaakelistaDbContext _context;
@@ -33,6 +37,7 @@ public class UserMedicineService
             Purpose = userMedicine.Purpose,
             Dosage = userMedicine.Dosage,
             RegularMedicine = userMedicine.RegularMedicine,
+            PrescriptionStatus = userMedicine.PrescriptionStatus,
             Notes = userMedicine.Notes
         }).ToList();
     }
@@ -64,8 +69,38 @@ public class UserMedicineService
             Purpose = userMedicine.Purpose,
             Dosage = userMedicine.Dosage,
             RegularMedicine = userMedicine.RegularMedicine,
+            PrescriptionStatus = userMedicine.PrescriptionStatus,
             Notes = userMedicine.Notes
         };
+    }
+
+    private static string? ResolvePrescriptionStatus(
+        Medicine medicine,
+        string? requestedStatus)
+    {
+        if (medicine.HasPrescriptionPackages &&
+            medicine.HasOverTheCounterPackages)
+        {
+            if (requestedStatus is "R" or "K")
+            {
+                return requestedStatus;
+            }
+
+            throw new PrescriptionStatusException(
+                "Valitse resepti- tai itsehoitopakkaus.");
+        }
+
+        if (medicine.HasPrescriptionPackages)
+        {
+            return "R";
+        }
+
+        if (medicine.HasOverTheCounterPackages)
+        {
+            return "K";
+        }
+
+        return null;
     }
 
     public async Task<UserMedicineCreateResult?> CreateAsync(
@@ -93,6 +128,15 @@ public class UserMedicineService
             };
         }
 
+        string? prescriptionStatus;
+        try {
+            prescriptionStatus = ResolvePrescriptionStatus(
+                medicine,
+                request.PrescriptionStatus);
+        } catch (ArgumentException ex) {
+            throw new InvalidOperationException(ex.Message);
+        }
+
         var userMedicine = new UserMedicine
         {
             UserId = userId,
@@ -100,6 +144,7 @@ public class UserMedicineService
             Purpose = request.Purpose,
             Dosage = request.Dosage,
             RegularMedicine = request.RegularMedicine,
+            PrescriptionStatus = prescriptionStatus,
             Notes = request.Notes
         };
 
@@ -121,6 +166,7 @@ public class UserMedicineService
                 Purpose = userMedicine.Purpose,
                 Dosage = userMedicine.Dosage,
                 RegularMedicine = userMedicine.RegularMedicine,
+                PrescriptionStatus = userMedicine.PrescriptionStatus,
                 Notes = userMedicine.Notes
             },
             AlreadyExists = false
@@ -142,18 +188,23 @@ public class UserMedicineService
             return false;
         }
 
-        var medicineExists = await _context.Medicines
-            .AnyAsync(medicine => medicine.Id == request.MedicineId);
+        var medicine = await _context.Medicines
+            .FirstOrDefaultAsync(medicine => medicine.Id == request.MedicineId);
 
-        if (!medicineExists)
+        if (medicine is null)
         {
             return false;
         }
+
+        var prescriptionStatus = ResolvePrescriptionStatus(
+            medicine,
+            request.PrescriptionStatus);
 
         userMedicine.MedicineId = request.MedicineId;
         userMedicine.Purpose = request.Purpose;
         userMedicine.Dosage = request.Dosage;
         userMedicine.RegularMedicine = request.RegularMedicine;
+        userMedicine.PrescriptionStatus = prescriptionStatus;
         userMedicine.Notes = request.Notes;
 
         await _context.SaveChangesAsync();

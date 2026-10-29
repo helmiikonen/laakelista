@@ -44,16 +44,26 @@ public class FimeaImportService
                 continue;
             }
 
-            // Etsitään lääkevalmisteeseen liittyvä pakkaus.
-            var package = data.Packages
-                .FirstOrDefault(p =>
-                    p.MedicineReference == fimeaMedicine.FimeaId);
+            // Haetaan kaikki kyseiseen lääkevalmisteeseen liittyvät pakkaukset.
+            var packages = data.Packages
+                .Where(p => p.MedicineReference == fimeaMedicine.FimeaId)
+                .ToList();
 
-            // Selvitetään pakkauksen kautta Laakeaine.
+            // Selvitetään, löytyykö valmisteesta resepti- ja/tai itsehoitopakkauksia.
+            var hasPrescriptionPackages = packages.Any(
+                p => p.PrescriptionStatus?.Id == "R"); // reseptipakkaus
+
+            var hasOverTheCounterPackages = packages.Any(
+                p => p.PrescriptionStatus?.Id == "K"); // itsehoitopakkaus
+
+            // Selvitetään vaikuttava aine pakkauksen kautta.
+            var package = packages.FirstOrDefault(
+                p => p.SubstanceReference?.SubstanceReferenceId != null);
+
             var substance = package?.SubstanceReference?.SubstanceReferenceId != null
                 ? data.Substances.FirstOrDefault(
                     s => s.FimeaId ==
-                         package.SubstanceReference.SubstanceReferenceId)
+                        package.SubstanceReference.SubstanceReferenceId)
                 : null;
 
             // Kerätään kaikki vaikuttavat aineet yhteen merkkijonoon.
@@ -90,6 +100,10 @@ public class FimeaImportService
                 existingMedicine.AuthorisationStatus =
                     fimeaMedicine.MarketingAuthorisation?.Status?.Value;
                 existingMedicine.IsHumanMedicine = true;
+                existingMedicine.HasPrescriptionPackages =
+                    hasPrescriptionPackages;
+                existingMedicine.HasOverTheCounterPackages =
+                    hasOverTheCounterPackages;
             }
             else
             {
@@ -111,7 +125,9 @@ public class FimeaImportService
                         fimeaMedicine.MarketingAuthorisation?.AuthorisationNumber,
                     AuthorisationStatus =
                         fimeaMedicine.MarketingAuthorisation?.Status?.Value,
-                    IsHumanMedicine = true
+                    IsHumanMedicine = true,
+                    HasPrescriptionPackages = hasPrescriptionPackages,
+                    HasOverTheCounterPackages = hasOverTheCounterPackages
                 };
 
                 _context.Medicines.Add(medicine);

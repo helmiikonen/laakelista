@@ -11,4 +11,8 @@ public class MedicineResponse
     public string? Strength { get; set; }
 
     public string? DosageForm { get; set; }
+
+    public bool HasPrescriptionPackages { get; set; }
+    
+    public bool HasOverTheCounterPackages { get; set; }
 }

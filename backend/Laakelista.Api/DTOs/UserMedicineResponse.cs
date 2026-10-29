@@ -22,5 +22,7 @@ public class UserMedicineResponse
 
     public bool RegularMedicine { get; set; } = true;
 
+    public string? PrescriptionStatus { get; set; }
+
     public string? Notes { get; set; }
 }

@@ -28,6 +28,10 @@ public class Medicine
 
     public bool IsHumanMedicine { get; set; }
 
+    public bool HasPrescriptionPackages { get; set; }
+    
+    public bool HasOverTheCounterPackages { get; set; }
+
     public ICollection<UserMedicine> UserMedicines { get; set; }
         = new List<UserMedicine>();
 }

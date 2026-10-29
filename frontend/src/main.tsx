@@ -3,18 +3,8 @@ import { createRoot } from 'react-dom/client'
 import './index.css'
 import App from './App.tsx'
 import CssBaseline from "@mui/material/CssBaseline"
-import { ThemeProvider, createTheme } from "@mui/material/styles"
-
-const theme = createTheme({
-  palette: {
-    primary: {
-      main: "#1565c0",
-    },
-    secondary: {
-      main: "#2e7d32",
-    },
-  },
-})
+import { ThemeProvider } from "@mui/material/styles"
+import theme from './theme.ts'
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>

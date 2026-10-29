@@ -12,6 +12,8 @@ export type Medicine = {
   authorisationNumber: string | null
   authorisationStatus: string | null
   isHumanMedicine: boolean
+  hasPrescriptionPackages: boolean
+  hasOverTheCounterPackages: boolean
 }
 
 export type UserMedicine = {
@@ -25,6 +27,7 @@ export type UserMedicine = {
   purpose: string
   dosage: string
   regularMedicine: boolean
+  prescriptionStatus: string | null
   notes: string | null
 }
 
@@ -33,6 +36,7 @@ export type CreateUserMedicineRequest = {
   purpose: string
   dosage: string
   regularMedicine: boolean
+  prescriptionStatus: string | null
   notes: string | null
 }
 
@@ -41,5 +45,6 @@ export type UpdateUserMedicineRequest = {
   purpose: string
   dosage: string
   regularMedicine: boolean
+  prescriptionStatus: string | null
   notes: string | null
 }

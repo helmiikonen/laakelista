@@ -14,6 +14,7 @@ type EditMedicineDialogProps = {
     purpose: string, 
     dosage: string, 
     regularMedicine: boolean,
+    prescriptionStatus: string | null,
     notes: string
   ) => void
 }

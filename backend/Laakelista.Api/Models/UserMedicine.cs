@@ -16,6 +16,8 @@ public class UserMedicine
 
     public string? Notes { get; set; }
 
+    public string? PrescriptionStatus { get; set; }
+
     public Medicine Medicine { get; set; } = null!;
 
     public ApplicationUser User { get; set; } = null!;

@@ -82,10 +82,12 @@ function App() {
     }
   }
 
+
   async function handleAdd(
     purpose: string,
     dosage: string,
     regularMedicine: boolean,
+    prescriptionStatus: string | null,
     notes: string
   ) {
     if (!selectedMedicine) return
@@ -96,8 +98,10 @@ function App() {
         purpose,
         dosage,
         regularMedicine,
+        prescriptionStatus,
         notes: notes || null,
       })
+
       setSelectedMedicine(null)
       handleReset()
       await loadUserMedicines()
@@ -110,9 +114,11 @@ function App() {
         setDuplicateMedicine(selectedMedicine)
         return
       }
+
       setError("Lääkkeen lisääminen epäonnistui.")
     }
   }
+
 
   function handleAddClick(medicine: Medicine) {
     const alreadyExists = userMedicines.some(
@@ -137,6 +143,7 @@ function App() {
     }
   }
 
+
   async function handleSearch(pageNumber: number) {
     if (!search.trim()) {
       return
@@ -144,16 +151,18 @@ function App() {
     try {
       setError("")
       setSearching(true)
-      searchMedicines(search, pageNumber, pageSize).then(res => {
-        setTotalCount(res.totalCount)
-        setMedicines(res.items ?? res)
-      })
+      const res = await searchMedicines(search, pageNumber, pageSize)
+      setTotalCount(res.totalCount)
+      setMedicines(res.items ?? res)
     } catch {
       setError("Lääkkeiden haku epäonnistui.")
+      setMedicines([])
+      setTotalCount(0)
     } finally {
       setSearching(false)
-    }    
+    }
   }
+
 
   const handleNewSearch = () => {
     setPage(1)
@@ -239,6 +248,7 @@ function App() {
     purpose: string,
     dosage: string,
     regularMedicine: boolean,
+    prescriptionStatus: string | null,
     notes: string
   ) {
     if (!editingUserMedicine) {
@@ -253,6 +263,7 @@ function App() {
           purpose,
           dosage,
           regularMedicine,
+          prescriptionStatus,
           notes: notes || null,
         }
       )

@@ -86,6 +86,7 @@ public class UserMedicinesController : ControllerBase
                 userMedicine.Purpose,
                 userMedicine.Dosage,
                 userMedicine.RegularMedicine,
+                userMedicine.PrescriptionStatus,
                 userMedicine.Notes
             })
             .ToListAsync();
@@ -104,7 +105,16 @@ public class UserMedicinesController : ControllerBase
             return Unauthorized();
         }
 
-        var result = await _userMedicineService.CreateAsync(request, user.Id);
+        UserMedicineCreateResult? result;
+
+        try
+        {
+            result = await _userMedicineService.CreateAsync(request, user.Id);
+        }
+        catch (PrescriptionStatusException ex)
+        {
+            return BadRequest(new { message = ex.Message });
+        }
 
         if (result is null)
         {
@@ -137,10 +147,19 @@ public class UserMedicinesController : ControllerBase
             return Unauthorized();
         }
 
-        var updated = await _userMedicineService.UpdateAsync(
-            id,
-            request,
-            user.Id);
+        bool updated;
+
+        try
+        {
+            updated = await _userMedicineService.UpdateAsync(
+                id,
+                request,
+                user.Id);
+        }
+        catch (PrescriptionStatusException ex)
+        {
+            return BadRequest(new { message = ex.Message });
+        }
 
         if (!updated)
         {

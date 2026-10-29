@@ -1,8 +1,13 @@
 import {
   Typography,
   Button,
-  Box
+  Box,
+  CircularProgress
 } from "@mui/material"
+import {
+  ArrowBack,
+  ArrowForward
+} from "@mui/icons-material"
 import type { Medicine } from "../types"
 import MedicineCard from "./MedicineCard"
 
@@ -35,8 +40,8 @@ function SearchResults({
 return(
 
   <div className="results">
-    <Box sx={{display:"flex", flexDirection:"column", alignItems: "center"}}>
-      {searching ? <p>Haetaan...</p> : 
+    <Box sx={{display:"flex", flexDirection:"column", justifyContent: "center"}}>
+      {searching ? <div><CircularProgress size={24}/><p>Haetaan...</p></div> : 
         medicines.length == 0 && searchedTerm != "" ? 
         <Typography variant="body1">Ei tuloksia haulla "{searchedTerm}"</Typography> : <></>
       }
@@ -47,9 +52,22 @@ return(
           <Typography variant="body1">Näytetään tulokset 1-{totalCount}</Typography> 
         : 
         <div>
-          <Typography variant="body1">Näytetään tulokset {((page-1)*pageSize)+1}-{Math.min(page*pageSize, totalCount)}</Typography> 
-          {<Button onClick={handlePreviousPageClick} disabled={page == 1}>Edellinen sivu</Button>}
-          {<Button onClick={handleNextPageClick} disabled={page >= Math.floor(totalCount/pageSize)+1}>Seuraava sivu</Button>}
+          <Typography 
+            variant="body1">
+              Näytetään tulokset {((page-1)*pageSize)+1}-{Math.min(page*pageSize, totalCount)}
+          </Typography> 
+          <Button 
+            onClick={handlePreviousPageClick} 
+            disabled={page == 1}
+            startIcon={<ArrowBack/>}>
+              Edellinen sivu
+          </Button>
+          <Button 
+            onClick={handleNextPageClick} 
+            disabled={page >= Math.floor(totalCount/pageSize)+1}
+            endIcon={<ArrowForward/>}>
+              Seuraava sivu
+          </Button>
           
         </div>}
         
@@ -60,18 +78,39 @@ return(
 
     {error && <p>{error}</p>}
 
-    {medicines.map((medicine) => (
-      <MedicineCard 
-        key={medicine.id}
-        medicine={medicine}
-        onAdd={handleAddClick}
-      />
-    ))}
+    <Box
+      sx={{
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
+        width: "100%",
+        maxWidth: 700,
+        mx: "auto"
+      }}
+    >
+      {medicines.map((medicine) => (
+        <MedicineCard
+          key={medicine.id}
+          medicine={medicine}
+          onAdd={handleAddClick}
+        />
+      ))}
+    </Box>
 
     {totalCount > pageSize ?
     <div>
-      <Button onClick={handlePreviousPageClick} disabled={page == 1}>Edellinen sivu</Button>
-      <Button onClick={handleNextPageClick} disabled={page >= Math.floor(totalCount/pageSize)+1}>Seuraava sivu</Button>
+      <Button 
+        onClick={handlePreviousPageClick} 
+        disabled={page == 1}
+        startIcon={<ArrowBack/>}>
+          Edellinen sivu
+      </Button>
+      <Button 
+        onClick={handleNextPageClick} 
+        disabled={page >= Math.floor(totalCount/pageSize)+1}
+        endIcon={<ArrowForward/>}>
+          Seuraava sivu
+      </Button>
     </div> 
     : <></>}
   </div>

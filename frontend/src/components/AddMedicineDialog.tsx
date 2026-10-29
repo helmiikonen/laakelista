@@ -13,6 +13,7 @@ type AddMedicineDialogProps = {
     purpose: string,
     dosage: string,
     regularMedicine: boolean,
+    prescriptionStatus: string | null,
     notes: string
   ) => void
   onClose: () => void

@@ -32,7 +32,10 @@ public class MedicineService
             Id = medicine.Id,
             Name = medicine.Name,
             ActiveIngredient = medicine.ActiveIngredient,
-            Strength = medicine.Strength
+            Strength = medicine.Strength,
+            DosageForm = medicine.DosageForm,
+            HasPrescriptionPackages = medicine.HasPrescriptionPackages,
+            HasOverTheCounterPackages = medicine.HasOverTheCounterPackages
         }).ToList();
 
         return new PagedResult<MedicineResponse>
@@ -70,7 +73,9 @@ public class MedicineService
             Name = medicine.Name,
             ActiveIngredient = medicine.ActiveIngredient,
             Strength = medicine.Strength,
-            DosageForm = medicine.DosageForm
+            DosageForm = medicine.DosageForm,
+            HasPrescriptionPackages = medicine.HasPrescriptionPackages,
+            HasOverTheCounterPackages = medicine.HasOverTheCounterPackages
         }).ToList();
 
         return new PagedResult<MedicineResponse>
@@ -97,7 +102,9 @@ public class MedicineService
             Name = medicine.Name,
             ActiveIngredient = medicine.ActiveIngredient,
             Strength = medicine.Strength,
-            DosageForm = medicine.DosageForm
+            DosageForm = medicine.DosageForm,
+            HasPrescriptionPackages = medicine.HasPrescriptionPackages,
+            HasOverTheCounterPackages = medicine.HasOverTheCounterPackages
         };
     }
 

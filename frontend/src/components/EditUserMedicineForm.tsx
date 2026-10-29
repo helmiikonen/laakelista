@@ -17,7 +17,9 @@ type EditUserMedicineFormProps = {
     purpose: string, 
     dosage: string, 
     regularMedicine: boolean,
-    notes: string) => void
+    prescriptionStatus: string | null,
+    notes: string
+  ) => void
   onCancel: () => void
 }
 
@@ -30,10 +32,11 @@ function EditUserMedicineForm({
   const [dosage, setDosage] = useState(userMedicine.dosage)
   const [regularMedicine, setRegularMedicine] = useState(userMedicine.regularMedicine)
   const [notes, setNotes] = useState(userMedicine.notes ?? "")
+  const [prescriptionStatus, setPrescriptionStatus] = useState(userMedicine.prescriptionStatus)
 
   function handleSubmit(event: React.FormEvent) {
     event.preventDefault()
-    onSave(purpose, dosage, regularMedicine, notes)
+    onSave(purpose, dosage, regularMedicine, prescriptionStatus, notes)
   }
 
   return (
@@ -64,6 +67,26 @@ function EditUserMedicineForm({
           {userMedicine.activeIngredient}
         </Typography>
       )}
+
+      <FormControl>
+        <RadioGroup
+          value={prescriptionStatus ?? ""}
+          onChange={(event) =>
+            setPrescriptionStatus(event.target.value)
+          }
+        >
+          <FormControlLabel
+            value="R"
+            control={<Radio />}
+            label="Reseptilääke"
+          />
+          <FormControlLabel
+            value="K"
+            control={<Radio />}
+            label="Itsehoitolääke"
+          />
+        </RadioGroup>
+      </FormControl>
 
       <TextField
         label="Käyttötarkoitus"

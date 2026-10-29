@@ -68,7 +68,10 @@ function EditUserMedicineForm({
         </Typography>
       )}
 
-      <FormControl>
+      <FormControl required sx={{display:"flex", flexDirection:"column", justifyContent:"left"}}>
+        <Typography variant="body2" sx={{ mb: 1 }}>
+          Valitse lääkityksen tyyppi:
+        </Typography>
         <RadioGroup
           value={prescriptionStatus ?? ""}
           onChange={(event) =>
@@ -152,6 +155,7 @@ function EditUserMedicineForm({
         <Button
           type="submit"
           variant="contained"
+          disabled={prescriptionStatus == null}
         >
           Tallenna
         </Button>

@@ -67,7 +67,7 @@ export default function ChangePasswordForm({onCancel}: ChangePasswordFormProps) 
       component="form"
       onSubmit={handleSubmit}
       spacing={2}
-      sx={{ maxWidth: 400 }}
+      sx={{ width: "100%", maxWidth: 600, boxSizing: "border-box" }}
     >
       <Typography variant="h6">Vaihda salasana</Typography>
 

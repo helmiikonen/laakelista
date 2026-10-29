@@ -10,7 +10,8 @@ import {
   logout,
   deleteAccount
 } from "./api"
-import { Box, Button } from "@mui/material"
+import { Box, Button, Typography } from "@mui/material"
+import { Logout } from "@mui/icons-material" 
 import type { Medicine, UserMedicine } from "./types"
 import SearchMedicine from "./components/SearchMedicine"
 import UserMedicineList from "./components/UserMedicineList"
@@ -82,7 +83,6 @@ function App() {
     }
   }
 
-
   async function handleAdd(
     purpose: string,
     dosage: string,
@@ -119,7 +119,6 @@ function App() {
     }
   }
 
-
   function handleAddClick(medicine: Medicine) {
     const alreadyExists = userMedicines.some(
       userMedicine => userMedicine.medicineId === medicine.id
@@ -143,7 +142,6 @@ function App() {
     }
   }
 
-
   async function handleSearch(pageNumber: number) {
     if (!search.trim()) {
       return
@@ -163,7 +161,6 @@ function App() {
     }
   }
 
-
   const handleNewSearch = () => {
     setPage(1)
     handleSearch(1)
@@ -171,6 +168,7 @@ function App() {
   }
 
   const handleReset = () => {
+    setError("")
     setSearch("")
     setSearchedTerm("")
     setMedicines([])
@@ -192,7 +190,7 @@ function App() {
 
   const viewSettings = () => {
     setOpenSettings(!openSettings)
-    setError("")
+    handleReset()
   }
 
   const handleClickDelete = (userMedicine: UserMedicine) => {
@@ -285,33 +283,40 @@ function App() {
 
   return (
     <div className="app">
-      <Box sx={{
-        display: "flex",
-        flexDirection: "column"
-      }}>
-
       <Box
         sx={{
+          width: "100%",
+          boxSizing: "border-box",
           display: "flex",
           justifyContent: "space-between",
           alignItems: "center",
-          gap: 2,
-          flexWrap: "wrap",
-          mb: 3,
+          px: 2,
+          py: 1,
         }}
       >
-        <h2 id="header">Tervetuloa, {currentUser?.userName}!</h2>
-
-        <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
-          <Button variant="text" onClick={viewSettings}>
+        <Typography variant="h6">
+          Tervetuloa, {currentUser?.userName}!
+        </Typography>
+        <Box sx={{ display: "flex", justifyContent: "center", gap: 1 }}>
+          <Button variant="outlined" onClick={viewSettings}>
             {openSettings ? <>Etusivulle</> : <>Tilin asetukset</>}
           </Button>
-          <Button variant="outlined" onClick={handleLogout}>
-            Kirjaudu ulos
+          <Button 
+            variant="outlined" 
+            onClick={handleLogout}
+            endIcon={<Logout/>}>
+              Kirjaudu ulos
           </Button>
         </Box>
       </Box>
-
+      <Box 
+        sx={{
+          display: "flex",
+          flexDirection: "column",
+          width: "100%",
+          justifyContent:"center",
+          alignItems:"center"
+        }}>
       {openSettings ? 
         <UserSettings 
           currentUser={currentUser}
@@ -375,8 +380,6 @@ function App() {
         />
       </>
       }
-      
-      
     </Box>
     </div>
   )

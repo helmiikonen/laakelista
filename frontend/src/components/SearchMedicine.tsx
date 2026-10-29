@@ -2,8 +2,7 @@ import {
   Typography,
   TextField,
   Button,
-  Box,
-  Grid
+  Box
 } from "@mui/material"
 
 type SearchMedicineProps = {
@@ -21,6 +20,13 @@ function SearchMedicine({
 }: SearchMedicineProps) {
   return (
     <Box 
+      sx={{
+        mt: 2,
+        width: "100%",
+        maxWidth: 700,
+        mx: "auto",
+        boxSizing: "border-box"
+      }}
       component="form"
       className="search"
       onSubmit={(event) => {
@@ -32,63 +38,60 @@ function SearchMedicine({
         Lisää uusi lääke
       </Typography>
 
-      <Grid container
-        id="search-row"
+      <Box
         sx={{
-          padding: 2,
           display: "flex",
-          flexDirection: "row",
-          justifyContent: "left",
+          flexWrap: "wrap",
+          alignItems: "center",
+          gap: 1,
+          p: 2,
         }}
       >
-        <Grid 
-          size={{sm: 12, md: 8}}
+        
+        <Box
           sx={{
-              paddingBottom: 1, minWidth: 400
-            }}>
+            flex: "1 1 400px",
+            minWidth: 0,
+          }}
+        >
           <TextField
             fullWidth
-            
             id="medicine-search"
             label="Hae nimellä tai vaikuttavalla aineella"
             variant="outlined"
             value={search}
             type="search"
-            onChange={(event) =>
-              onSearchChange(event.target.value)
-            }
+            onChange={(event) => onSearchChange(event.target.value)}
           />
-        </Grid>
-        
-        <Grid 
-          size={{sm: 6, md: 2}}
-          sx={{paddingX: 1}}
+        </Box>
+
+        <Box
+          sx={{
+            display: "flex",
+            flexDirection: "row",
+            gap: 1,
+            flexShrink: 0,
+          }}
         >
           <Button
-            fullWidth
-            sx={{padding: 2}}
+            sx={{ py: 2 }}
             variant="contained"
             onClick={onSearch}
             type="submit"
           >
             Hae
-        </Button>
-        </Grid>
-        <Grid 
-          size={{sm: 6, md: 2}}
-          sx={{paddingRight: 1}}
-        >
+          </Button>
+
           <Button
-            fullWidth
-            sx={{padding: 2}}
+            sx={{ py: 2 }}
             variant="outlined"
             onClick={onReset}
             type="button"
           >
             Tyhjennä
           </Button>
-        </Grid>
-      </Grid>
+        </Box>
+      </Box>
     </Box>
   )
 }

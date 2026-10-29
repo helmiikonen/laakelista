@@ -2,9 +2,9 @@ import {
   Alert,
   Box, 
   Button, 
+  Card,
   InputAdornment,
   IconButton,
-  Paper,
   TextField, 
   Typography 
 } from "@mui/material"
@@ -93,7 +93,13 @@ function UserSettings({
   }, [openConfirmationMessage]);
 
   return (
-    <div>
+    <Box 
+      sx={{
+        width: "100%",
+        maxWidth: 600,
+        mx: "auto",
+        boxSizing: "border-box",
+      }}>
       <Typography 
         variant="h5" 
         sx={{ marginBottom: 2 }}
@@ -117,7 +123,7 @@ function UserSettings({
         />
         
         :
-        <Box sx={{display:"flex", flexDirection:"column"}}>
+        <Box sx={{display:"flex", flexDirection:"column", width: "100%", maxWidth: 600}}>
           <Typography variant="body1" sx={{margin:1}}>Käyttäjätunnus: {currentUser?.userName}</Typography>
           <Button 
             variant="outlined" 
@@ -139,7 +145,7 @@ function UserSettings({
               Tyhjennä oma lääkelista
           </Button>
           {openDeleteMedicinesDialog && 
-          <Paper sx={{padding: 2, maxWidth: "50vh", marginLeft:2, display: "flex", flexDirection:"column"}}>
+          <Card sx={{margin: 1, padding: 2, maxWidth: 600}}>
             <Typography 
               variant="subtitle2">
                 Haluatko varmasti poistaa kaikki lääkkeet listaltasi?
@@ -161,11 +167,11 @@ function UserSettings({
                 Peruuta
               </Button>
             </Box>
-          </Paper>}
+          </Card>}
           {openConfirmationMessage && 
-          <Typography variant="subtitle2">
-            Lääkelista tyhjennetty onnistuneesti!
-          </Typography>}
+            <Typography variant="subtitle2">
+              Lääkelista tyhjennetty onnistuneesti!
+            </Typography>}
           <Button 
             variant="outlined" 
             sx={{margin:1}} 
@@ -174,7 +180,7 @@ function UserSettings({
               Poista käyttäjätili
           </Button>
           {openDeleteAccountDialog && 
-          <Paper sx={{padding: 2, maxWidth: "50vh", marginLeft:2, display: "flex", flexDirection:"column"}}>
+          <Card sx={{margin: 1, padding: 2, maxWidth: 600}}>
             <Typography variant="subtitle2">
               Haluatko varmasti poistaa käyttäjätilisi? Tätä toimintoa ei voi peruuttaa.
             </Typography>
@@ -217,12 +223,12 @@ function UserSettings({
                 Peruuta
               </Button>
             </Box>
-          </Paper>
+          </Card>
           }
         </Box>
         }
       
-    </div>
+    </Box>
   )
 }
 

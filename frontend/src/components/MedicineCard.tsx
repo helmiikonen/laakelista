@@ -22,7 +22,7 @@ function MedicineCard({ medicine, onAdd }: MedicineCardProps) {
         <Typography variant="body1">
           <strong>{medicine.name} {medicine.strength} {medicine.dosageForm}</strong>
         </Typography>
-        <Box sx={{display:"flex", flexDirection:"row", justifyContent:"center"}}> 
+        <Box sx={{display:"flex", flexDirection:"row", justifyContent:"center", marginY: 1}}> 
             {medicine.hasPrescriptionPackages &&
               <Chip
                 label="Resepti"

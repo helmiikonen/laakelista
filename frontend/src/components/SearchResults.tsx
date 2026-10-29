@@ -53,7 +53,7 @@ return(
         : 
         <div>
           <Typography 
-            variant="body1">
+            variant="body1" sx={{marginY:1}}>
               Näytetään tulokset {((page-1)*pageSize)+1}-{Math.min(page*pageSize, totalCount)}
           </Typography> 
           <Button 
@@ -85,7 +85,8 @@ return(
         alignItems: "center",
         width: "100%",
         maxWidth: 700,
-        mx: "auto"
+        mx: "auto",
+        marginBottom: 2
       }}
     >
       {medicines.map((medicine) => (
@@ -98,7 +99,7 @@ return(
     </Box>
 
     {totalCount > pageSize ?
-    <div>
+    <Box sx={{display: "flex", justifyContent:"center", marginBottom: 2}}>
       <Button 
         onClick={handlePreviousPageClick} 
         disabled={page == 1}
@@ -111,7 +112,7 @@ return(
         endIcon={<ArrowForward/>}>
           Seuraava sivu
       </Button>
-    </div> 
+    </Box> 
     : <></>}
   </div>
 )
